@@ -22,24 +22,13 @@ const Documentation = () => {
             <Key className="w-6 h-6" />
             Getting Started
           </h2>
-          <div className="glass-card rounded-lg p-6 mb-6">
-            <h3 className="text-lg font-medium mb-4">Authentication</h3>
-            <p className="text-muted-foreground mb-4">
-              All API requests require an API key to be included in the header:
-            </p>
-            <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm overflow-x-auto">
-              <pre>
-                {`Authorization: Bearer YOUR_API_KEY`}
-              </pre>
-            </div>
-          </div>
           <div className="glass-card rounded-lg p-6">
             <h3 className="text-lg font-medium mb-4">Base URL</h3>
             <p className="text-muted-foreground mb-4">
-              All API requests should be made to:
+              All API requests should be made to the base URL:
             </p>
             <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm">
-              <code>https://api.supermarket-data.org/v1</code>
+              <code>https://api.supermarket-data.org/v0</code>
             </div>
           </div>
         </section>
@@ -61,12 +50,8 @@ const Documentation = () => {
                   <h3 className="text-lg font-medium mb-2">{endpoint.title}</h3>
                   <p className="text-muted-foreground">{endpoint.description}</p>
                 </div>
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  endpoint.method === 'GET' ? 'bg-green-100 text-green-800' : 
-                  endpoint.method === 'POST' ? 'bg-blue-100 text-blue-800' : 
-                  'bg-gray-100 text-gray-800'
-                }`}>
-                  {endpoint.method}
+                <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                  GET
                 </span>
               </div>
               <div className="mb-4">
@@ -80,14 +65,6 @@ const Documentation = () => {
                   <h4 className="text-sm font-medium mb-2">Parameters</h4>
                   <div className="bg-secondary/50 p-3 rounded-md font-mono text-sm">
                     <pre>{JSON.stringify(endpoint.parameters, null, 2)}</pre>
-                  </div>
-                </div>
-              )}
-              {endpoint.response && (
-                <div>
-                  <h4 className="text-sm font-medium mb-2">Example Response</h4>
-                  <div className="bg-secondary/50 p-3 rounded-md font-mono text-sm">
-                    <pre>{JSON.stringify(endpoint.response, null, 2)}</pre>
                   </div>
                 </div>
               )}
@@ -142,78 +119,31 @@ const Documentation = () => {
 
 const endpoints = [
   {
-    title: "List Products",
-    description: "Retrieve a list of products with optional filtering",
-    method: "GET",
-    path: "/products",
+    title: "List Chains",
+    description: "Retrieve a list of available supermarket chains",
+    path: "/list_chains/v0",
+  },
+  {
+    title: "List File Types",
+    description: "Get a list of available file types",
+    path: "/list_file_types/v0",
+  },
+  {
+    title: "List Files",
+    description: "Get a list of files for a specific chain",
+    path: "/list_files/v0",
     parameters: {
-      chain: "string (optional) - Filter by supermarket chain",
-      category: "string (optional) - Filter by product category",
-      limit: "number (optional) - Number of results per page",
-      page: "number (optional) - Page number for pagination",
-    },
-    response: {
-      products: [
-        {
-          id: "123",
-          name: "Product Name",
-          price: 9.99,
-          chain: "SuperCo",
-          category: "Dairy",
-          last_updated: "2024-03-15T10:30:00Z"
-        }
-      ],
-      total: 100,
-      page: 1,
-      limit: 10
+      chain: "string (required) - Supermarket chain name",
+      file_type: "string (optional) - Filter by file type"
     }
   },
   {
-    title: "Price History",
-    description: "Get historical price data for a specific product",
-    method: "GET",
-    path: "/products/:id/history",
+    title: "File Content",
+    description: "Retrieve the content of a specific file",
+    path: "/file_content/v0",
     parameters: {
-      start_date: "string (optional) - Start date for history (YYYY-MM-DD)",
-      end_date: "string (optional) - End date for history (YYYY-MM-DD)",
-    },
-    response: {
-      product_id: "123",
-      prices: [
-        {
-          date: "2024-03-15",
-          price: 9.99,
-          chain: "SuperCo"
-        }
-      ]
-    }
-  },
-  {
-    title: "Compare Prices",
-    description: "Compare prices across different supermarket chains",
-    method: "POST",
-    path: "/compare",
-    parameters: {
-      product_ids: "array - List of product IDs to compare",
-      chains: "array (optional) - List of chains to include in comparison"
-    },
-    response: {
-      comparisons: [
-        {
-          product_id: "123",
-          name: "Product Name",
-          prices: [
-            {
-              chain: "SuperCo",
-              price: 9.99
-            },
-            {
-              chain: "MegaMart",
-              price: 10.49
-            }
-          ]
-        }
-      ]
+      chain: "string (required) - Supermarket chain name",
+      file: "string (required) - File name to retrieve"
     }
   }
 ];
@@ -221,49 +151,53 @@ const endpoints = [
 const codeExamples = [
   {
     language: "JavaScript/TypeScript",
-    code: `const API_KEY = 'your_api_key';
+    code: `// List all available chains
+async function listChains() {
+  const response = await fetch('https://api.supermarket-data.org/v0/list_chains/v0');
+  return await response.json();
+}
 
-async function fetchProducts() {
-  const response = await fetch('https://api.supermarket-data.org/v1/products', {
-    headers: {
-      'Authorization': \`Bearer \${API_KEY}\`,
-      'Content-Type': 'application/json'
-    }
-  });
+// Get files for a specific chain
+async function listFiles(chain, fileType = null) {
+  const params = new URLSearchParams({ chain });
+  if (fileType) params.append('file_type', fileType);
   
-  const data = await response.json();
-  return data;
+  const response = await fetch(
+    \`https://api.supermarket-data.org/v0/list_files/v0?\${params}\`
+  );
+  return await response.json();
 }`
   },
   {
     language: "Python",
     code: `import requests
 
-API_KEY = 'your_api_key'
+# List all available chains
+def list_chains():
+    response = requests.get('https://api.supermarket-data.org/v0/list_chains/v0')
+    return response.json()
 
-def fetch_products():
-    headers = {
-        'Authorization': f'Bearer {API_KEY}',
-        'Content-Type': 'application/json'
-    }
-    
+# Get files for a specific chain
+def list_files(chain, file_type=None):
+    params = {'chain': chain}
+    if file_type:
+        params['file_type'] = file_type
+        
     response = requests.get(
-        'https://api.supermarket-data.org/v1/products',
-        headers=headers
+        'https://api.supermarket-data.org/v0/list_files/v0',
+        params=params
     )
-    
     return response.json()`
   }
 ];
 
 const quickStartSteps = [
-  "Sign up for an API key through our developer portal",
-  "Include your API key in the Authorization header of all requests",
-  "Start with the /products endpoint to retrieve basic product data",
-  "Use the filtering parameters to narrow down results",
-  "Implement pagination to handle large datasets efficiently",
-  "Use the comparison endpoint to analyze prices across different chains",
-  "Monitor your API usage through our developer dashboard"
+  "Start by calling /list_chains/v0 to get available supermarket chains",
+  "Use /list_file_types/v0 to see what types of files are available",
+  "Get a list of files for your chosen chain using /list_files/v0",
+  "Retrieve file contents using /file_content/v0 with the chain and file name",
+  "Handle responses appropriately and implement error handling",
+  "Consider caching responses when appropriate to improve performance"
 ];
 
 export default Documentation;
