@@ -1,7 +1,10 @@
 
 import { Database, ChartBar, Users, Code, ArrowUp } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -20,7 +23,10 @@ const Index = () => {
             developers, and consumers.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <button className="px-8 py-3 font-semibold text-white bg-primary rounded-lg hover-lift">
+            <button 
+              onClick={() => navigate('/docs')}
+              className="px-8 py-3 font-semibold text-white bg-primary rounded-lg hover-lift"
+            >
               Get Started
             </button>
             <button className="px-8 py-3 font-semibold border border-primary/20 rounded-lg hover-lift">
