@@ -1,3 +1,4 @@
+
 import { Database, ChartBar, Users, Code, ArrowUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -97,9 +98,14 @@ const Index = () => {
               Be part of the movement to make supermarket data accessible to everyone.
               Contribute, learn, and build with us.
             </p>
-            <button className="px-8 py-3 font-semibold bg-white text-primary rounded-lg hover-lift">
+            <a 
+              href="https://discord.gg/qtJyuwKy" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="inline-block px-8 py-3 font-semibold bg-white text-primary rounded-lg hover-lift"
+            >
               Get Involved
-            </button>
+            </a>
           </div>
         </div>
       </section>
