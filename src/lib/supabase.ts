@@ -1,14 +1,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
-console.log('Supabase Key:', import.meta.env.VITE_SUPABASE_ANON_KEY);
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Supabase environment variables are not set. Make sure you have connected your Supabase project in the Lovable interface.');
-}
+const supabaseUrl = 'https://sjifhmsdzwktdglnpyba.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqaWZobXNkendrdGRnbG5weWJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk4MTM5NTEsImV4cCI6MjA1NTM4OTk1MX0.Za_Ts7zPQ2J20qFRg6GQqI3zniyaAfgCAWcvxz3uJAc';
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
