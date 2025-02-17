@@ -1,12 +1,8 @@
-
 import { Database, ChartBar, Users, Code, ArrowUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
 const Index = () => {
   const navigate = useNavigate();
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
@@ -23,15 +19,10 @@ const Index = () => {
             developers, and consumers.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <button 
-              onClick={() => navigate('/docs')}
-              className="px-8 py-3 font-semibold text-white bg-primary rounded-lg hover-lift"
-            >
+            <button onClick={() => navigate('/docs')} className="px-8 py-3 font-semibold text-white bg-primary rounded-lg hover-lift">
               Get Started
             </button>
-            <button className="px-8 py-3 font-semibold border border-primary/20 rounded-lg hover-lift">
-              Learn More
-            </button>
+            <button className="px-8 py-3 font-semibold border border-primary/20 rounded-lg hover-lift">Get API key</button>
           </div>
         </div>
       </section>
@@ -46,17 +37,13 @@ const Index = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <div
-                key={feature.title}
-                className="glass-card p-6 rounded-xl hover-lift animate-fade-up"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
+            {features.map((feature, index) => <div key={feature.title} className="glass-card p-6 rounded-xl hover-lift animate-fade-up" style={{
+            animationDelay: `${index * 100}ms`
+          }}>
                 <feature.icon className="w-12 h-12 text-primary mb-4" />
                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                 <p className="text-muted-foreground">{feature.description}</p>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -71,23 +58,17 @@ const Index = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {audiences.map((audience, index) => (
-              <div
-                key={audience.title}
-                className="p-8 rounded-xl border border-border hover-lift animate-fade-up"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
+            {audiences.map((audience, index) => <div key={audience.title} className="p-8 rounded-xl border border-border hover-lift animate-fade-up" style={{
+            animationDelay: `${index * 100}ms`
+          }}>
                 <h3 className="text-2xl font-semibold mb-4">{audience.title}</h3>
                 <ul className="space-y-3">
-                  {audience.benefits.map((benefit, i) => (
-                    <li key={i} className="flex items-start gap-3">
+                  {audience.benefits.map((benefit, i) => <li key={i} className="flex items-start gap-3">
                       <ArrowUp className="w-5 h-5 text-primary shrink-0 rotate-45" />
                       <span className="text-muted-foreground">{benefit}</span>
-                    </li>
-                  ))}
+                    </li>)}
                 </ul>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -109,70 +90,36 @@ const Index = () => {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
-const features = [
-  {
-    icon: Database,
-    title: "Data Collection",
-    description: "Comprehensive and reliable data fetched directly from supermarket sources.",
-  },
-  {
-    icon: ChartBar,
-    title: "Analytics",
-    description: "Track prices and promotions over time with detailed insights.",
-  },
-  {
-    icon: Code,
-    title: "API Access",
-    description: "Flexible integration options with programmatic data access.",
-  },
-  {
-    icon: Users,
-    title: "Community",
-    description: "Join a growing community of developers and researchers.",
-  },
-];
-
-const audiences = [
-  {
-    title: "For Researchers",
-    benefits: [
-      "Access comprehensive historical data",
-      "Analyze price trends and patterns",
-      "Export data in research-friendly formats",
-      "Connect with other academic users",
-    ],
-  },
-  {
-    title: "For Developers",
-    benefits: [
-      "Integrate with our robust API",
-      "Access standardized data structures",
-      "Build innovative applications",
-      "Contribute to open-source tools",
-    ],
-  },
-  {
-    title: "For Consumers",
-    benefits: [
-      "Make informed purchasing decisions",
-      "Track price changes over time",
-      "Compare prices across stores",
-      "Stay updated on promotions",
-    ],
-  },
-  {
-    title: "For Social Entrepreneurs",
-    benefits: [
-      "Drive social impact initiatives",
-      "Analyze market accessibility",
-      "Promote price transparency",
-      "Support community projects",
-    ],
-  },
-];
-
+const features = [{
+  icon: Database,
+  title: "Data Collection",
+  description: "Comprehensive and reliable data fetched directly from supermarket sources."
+}, {
+  icon: ChartBar,
+  title: "Analytics",
+  description: "Track prices and promotions over time with detailed insights."
+}, {
+  icon: Code,
+  title: "API Access",
+  description: "Flexible integration options with programmatic data access."
+}, {
+  icon: Users,
+  title: "Community",
+  description: "Join a growing community of developers and researchers."
+}];
+const audiences = [{
+  title: "For Researchers",
+  benefits: ["Access comprehensive historical data", "Analyze price trends and patterns", "Export data in research-friendly formats", "Connect with other academic users"]
+}, {
+  title: "For Developers",
+  benefits: ["Integrate with our robust API", "Access standardized data structures", "Build innovative applications", "Contribute to open-source tools"]
+}, {
+  title: "For Consumers",
+  benefits: ["Make informed purchasing decisions", "Track price changes over time", "Compare prices across stores", "Stay updated on promotions"]
+}, {
+  title: "For Social Entrepreneurs",
+  benefits: ["Drive social impact initiatives", "Analyze market accessibility", "Promote price transparency", "Support community projects"]
+}];
 export default Index;
