@@ -1,8 +1,16 @@
 import { Database, ChartBar, Users, Code, ArrowUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { AuthDialog } from "@/components/AuthDialog";
+
 const Index = () => {
   const navigate = useNavigate();
-  return <div className="min-h-screen">
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
+
+  return (
+    <div className="min-h-screen">
+      <AuthDialog isOpen={showAuthDialog} onClose={() => setShowAuthDialog(false)} />
+      
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
@@ -22,7 +30,12 @@ const Index = () => {
             <button onClick={() => navigate('/docs')} className="px-8 py-3 font-semibold text-white bg-primary rounded-lg hover-lift">
               Get Started
             </button>
-            <button className="px-8 py-3 font-semibold border border-primary/20 rounded-lg hover-lift">Get API key</button>
+            <button 
+              onClick={() => setShowAuthDialog(true)} 
+              className="px-8 py-3 font-semibold border border-primary/20 rounded-lg hover-lift"
+            >
+              Get API key
+            </button>
           </div>
         </div>
       </section>
@@ -90,8 +103,10 @@ const Index = () => {
           </div>
         </div>
       </section>
-    </div>;
+    </div>
+  );
 };
+
 const features = [{
   icon: Database,
   title: "Data Collection",
@@ -109,6 +124,7 @@ const features = [{
   title: "Community",
   description: "Join a growing community of developers and researchers."
 }];
+
 const audiences = [{
   title: "For Researchers",
   benefits: ["Access comprehensive historical data", "Analyze price trends and patterns", "Export data in research-friendly formats", "Connect with other academic users"]
@@ -122,4 +138,5 @@ const audiences = [{
   title: "For Social Entrepreneurs",
   benefits: ["Drive social impact initiatives", "Analyze market accessibility", "Promote price transparency", "Support community projects"]
 }];
+
 export default Index;
