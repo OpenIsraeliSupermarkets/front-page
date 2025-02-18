@@ -17,7 +17,10 @@ serve(async (req) => {
 
   try {
     const url = new URL(req.url)
-    const targetUrl = new URL(url.pathname + url.search, TARGET_URL)
+    
+    // Remove the /api-proxy prefix from the pathname
+    const cleanPathname = url.pathname.replace('/api-proxy', '')
+    const targetUrl = new URL(cleanPathname + url.search, TARGET_URL)
 
     // Log incoming request details
     console.log('Incoming request:', {
@@ -26,6 +29,7 @@ serve(async (req) => {
       targetUrl: targetUrl.toString(),
       headers: Object.fromEntries(req.headers),
       pathname: url.pathname,
+      cleanPathname: cleanPathname,
       search: url.search
     })
 
