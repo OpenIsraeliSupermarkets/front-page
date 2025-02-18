@@ -19,6 +19,27 @@ serve(async (req) => {
     const url = new URL(req.url)
     const targetUrl = new URL(url.pathname + url.search, TARGET_URL)
 
+    // Log incoming request details
+    console.log('Incoming request:', {
+      method: req.method,
+      url: req.url,
+      targetUrl: targetUrl.toString(),
+      headers: Object.fromEntries(req.headers),
+      pathname: url.pathname,
+      search: url.search
+    })
+
+    // Log request body for non-GET requests
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      try {
+        const clonedReq = req.clone()
+        const bodyText = await clonedReq.text()
+        console.log('Request body:', bodyText)
+      } catch (e) {
+        console.log('Could not read request body:', e)
+      }
+    }
+
     const response = await fetch(targetUrl.toString(), {
       method: req.method,
       headers: {
@@ -31,6 +52,13 @@ serve(async (req) => {
 
     // Get the response body as an ArrayBuffer
     const responseBody = await response.arrayBuffer()
+
+    // Log response details
+    console.log('Response:', {
+      status: response.status,
+      headers: Object.fromEntries(response.headers),
+      size: responseBody.byteLength
+    })
 
     // Return the response with CORS headers
     return new Response(responseBody, {
