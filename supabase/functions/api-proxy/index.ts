@@ -7,6 +7,8 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
 }
 
+const TARGET_URL = "http://erlichsefi.ddns.net:8080"
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -14,17 +16,17 @@ serve(async (req) => {
   }
 
   try {
-    const backendUrl = "http://erlichsefi.ddns.net:8080"
-    
-    // Forward the request to the backend
-    const response = await fetch(backendUrl, {
+    const url = new URL(req.url)
+    const targetUrl = new URL(url.pathname + url.search, TARGET_URL)
+
+    const response = await fetch(targetUrl.toString(), {
       method: req.method,
       headers: {
         ...Object.fromEntries(req.headers),
         // Remove headers that might cause issues
-        'host': new URL(backendUrl).host,
+        'host': new URL(TARGET_URL).host,
       },
-      body: req.method !== 'GET' ? req.body : undefined,
+      body: req.method !== "GET" && req.method !== "HEAD" ? req.body : null,
     })
 
     // Get the response body as an ArrayBuffer
