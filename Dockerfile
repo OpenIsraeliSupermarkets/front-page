@@ -24,5 +24,5 @@ ENV HOST=0.0.0.0
 ENV HOSTNAME=0.0.0.0
 ENV PORT=3000
 
-# שינוי הפקודה להרצת האפליקציה
-CMD ["npm", "run", "dev"]
+# שינוי הפקודה להרצת השרת
+CMD ["node", "--experimental-json-modules", "src/server.js"]
