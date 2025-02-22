@@ -1,18 +1,32 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useUser } from "../contexts/UserContext";
+import { supabase } from "@/lib/supabase";
+import { AuthDialog } from "@/components/AuthDialog";
 
 const Navbar = () => {
   const location = useLocation();
   const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
 
   const isActive = (path: string) => {
     return location.pathname === path;
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/");
+  };
+
   return (
     <>
+      <AuthDialog
+        isOpen={showAuthDialog}
+        onClose={() => setShowAuthDialog(false)}
+      />
+
       {/* Overlay - lowest z-index */}
       {isOpen && (
         <div
@@ -29,8 +43,29 @@ const Navbar = () => {
       >
         {/* User Info Section */}
         <div className="py-4 px-6 border-b">
-          <div className="text-sm font-medium text-gray-900">{user?.name}</div>
-          <div className="text-xs text-gray-500">{user?.email}</div>
+          {user ? (
+            <>
+              <div className="text-sm font-medium text-gray-900 break-words">
+                {user.name}
+              </div>
+              <div className="text-xs text-gray-500 break-words mb-2">
+                {user.email}
+              </div>
+              <button
+                onClick={handleLogout}
+                className="text-xs text-red-500 hover:text-red-700 cursor-pointer"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => setShowAuthDialog(true)}
+              className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer"
+            >
+              Login / Register
+            </button>
+          )}
         </div>
 
         {/* Navigation Links */}

@@ -1,4 +1,11 @@
-import { createContext, useContext, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useEffect,
+} from "react";
+import { supabase } from "@/lib/supabase";
 
 interface User {
   name: string;
@@ -22,15 +29,42 @@ export const useUser = () => {
 };
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  // בשלב זה נשתמש בנתונים קבועים לדוגמה
-  const user = {
-    name: "John Doe",
-    email: "john@example.com",
-    apiToken: "abc123",
-  };
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser({
+          name: session.user.email || "משתמש אנונימי",
+          email: session.user.email || "",
+          apiToken: session.access_token,
+        });
+      }
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUser({
+          name: session.user.email || "משתמש אנונימי",
+          email: session.user.email || "",
+          apiToken: session.access_token,
+        });
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser: () => {} }}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   );
