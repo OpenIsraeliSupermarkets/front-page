@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,6 +8,7 @@ import Documentation from "./pages/Documentation";
 import NotFound from "./pages/NotFound";
 import APITokens from "./pages/APITokens";
 import API from "./pages/API";
+import Navbar from "./components/Navbar";
 
 const queryClient = new QueryClient();
 
@@ -18,14 +18,16 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/docs" element={<Documentation />} />
-          <Route path="/api-tokens" element={<APITokens />} />
-          <Route path="/api/*" element={<API />} /> {/* New API catch-all route */}
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Navbar />
+        <div className="px-8 py-8">
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/documentation" element={<Documentation />} />
+            <Route path="/api-tokens" element={<APITokens />} />
+            <Route path="/api/*" element={<API />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
