@@ -1,11 +1,12 @@
-
 import { Code2, Key, Database, PlayCircle } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 const Documentation = () => {
   return (
     <div className="min-h-screen bg-background">
+      <BackButton />
       {/* Header */}
-      <div className="border-b">
+      <div className="border-b pt-16">
         <div className="container py-8 px-4">
           <h1 className="text-4xl font-bold mb-4">API Documentation</h1>
           <p className="text-lg text-muted-foreground">
@@ -40,7 +41,7 @@ const Documentation = () => {
             API Endpoints
           </h2>
           {endpoints.map((endpoint, index) => (
-            <div 
+            <div
               key={endpoint.path}
               className="glass-card rounded-lg p-6 mb-6 last:mb-0"
               style={{ animationDelay: `${index * 100}ms` }}
@@ -48,7 +49,9 @@ const Documentation = () => {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="text-lg font-medium mb-2">{endpoint.title}</h3>
-                  <p className="text-muted-foreground">{endpoint.description}</p>
+                  <p className="text-muted-foreground">
+                    {endpoint.description}
+                  </p>
                 </div>
                 <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
                   GET
@@ -79,7 +82,7 @@ const Documentation = () => {
             Code Examples
           </h2>
           {codeExamples.map((example, index) => (
-            <div 
+            <div
               key={example.language}
               className="glass-card rounded-lg p-6 mb-6 last:mb-0"
               style={{ animationDelay: `${index * 100}ms` }}
@@ -101,7 +104,7 @@ const Documentation = () => {
           <div className="glass-card rounded-lg p-6">
             <ol className="space-y-4 list-decimal list-inside text-muted-foreground">
               {quickStartSteps.map((step, index) => (
-                <li 
+                <li
                   key={index}
                   className="pl-2"
                   style={{ animationDelay: `${index * 100}ms` }}
@@ -134,8 +137,8 @@ const endpoints = [
     path: "/list_files/v0",
     parameters: {
       chain: "string (required) - Supermarket chain name",
-      file_type: "string (optional) - Filter by file type"
-    }
+      file_type: "string (optional) - Filter by file type",
+    },
   },
   {
     title: "File Content",
@@ -143,9 +146,9 @@ const endpoints = [
     path: "/file_content/v0",
     parameters: {
       chain: "string (required) - Supermarket chain name",
-      file: "string (required) - File name to retrieve"
-    }
-  }
+      file: "string (required) - File name to retrieve",
+    },
+  },
 ];
 
 const codeExamples = [
@@ -166,7 +169,7 @@ async function listFiles(chain, fileType = null) {
     \`https://api.supermarket-data.org/v0/list_files/v0?\${params}\`
   );
   return await response.json();
-}`
+}`,
   },
   {
     language: "Python",
@@ -187,8 +190,8 @@ def list_files(chain, file_type=None):
         'https://api.supermarket-data.org/v0/list_files/v0',
         params=params
     )
-    return response.json()`
-  }
+    return response.json()`,
+  },
 ];
 
 const quickStartSteps = [
@@ -197,7 +200,7 @@ const quickStartSteps = [
   "Get a list of files for your chosen chain using /list_files/v0",
   "Retrieve file contents using /file_content/v0 with the chain and file name",
   "Handle responses appropriately and implement error handling",
-  "Consider caching responses when appropriate to improve performance"
+  "Consider caching responses when appropriate to improve performance",
 ];
 
 export default Documentation;
