@@ -8,6 +8,7 @@ import {
 import { supabase } from "@/lib/supabase";
 
 interface User {
+  id: string;
   firstName: string;
   lastName: string;
   name: string;
@@ -39,9 +40,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       if (session?.user) {
         const userData = session.user.user_metadata;
         setUser({
+          id: session.user.id,
           firstName: userData?.first_name || "",
           lastName: userData?.last_name || "",
-          name: userData?.full_name || session.user.email || "משתמש אנונימי",
+          name: userData?.full_name || session.user.email || "Anonymous User",
           email: session.user.email || "",
           apiToken: session.access_token,
         });
@@ -55,9 +57,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       if (session?.user) {
         const userData = session.user.user_metadata;
         setUser({
+          id: session.user.id,
           firstName: userData?.first_name || "",
           lastName: userData?.last_name || "",
-          name: userData?.full_name || session.user.email || "משתמש אנונימי",
+          name: userData?.full_name || session.user.email || "Anonymous User",
           email: session.user.email || "",
           apiToken: session.access_token,
         });
