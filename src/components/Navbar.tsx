@@ -1,8 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
+import { useUser } from "../contexts/UserContext";
 
 const Navbar = () => {
   const location = useLocation();
+  const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
 
   const isActive = (path: string) => {
@@ -25,7 +27,14 @@ const Navbar = () => {
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="py-16">
+        {/* User Info Section */}
+        <div className="py-4 px-6 border-b">
+          <div className="text-sm font-medium text-gray-900">{user?.name}</div>
+          <div className="text-xs text-gray-500">{user?.email}</div>
+        </div>
+
+        {/* Navigation Links */}
+        <div className="py-4">
           <div className="flex flex-col">
             <Link
               to="/"
@@ -38,26 +47,6 @@ const Navbar = () => {
               Home
             </Link>
             <Link
-              to="/api"
-              className={`px-6 py-3 text-sm font-medium border-r-4 ${
-                isActive("/api")
-                  ? "text-blue-600 border-blue-600 bg-blue-50"
-                  : "text-gray-500 border-transparent hover:text-blue-600 hover:bg-blue-50 hover:border-blue-600"
-              }`}
-            >
-              API
-            </Link>
-            <Link
-              to="/api-tokens"
-              className={`px-6 py-3 text-sm font-medium border-r-4 ${
-                isActive("/api-tokens")
-                  ? "text-blue-600 border-blue-600 bg-blue-50"
-                  : "text-gray-500 border-transparent hover:text-blue-600 hover:bg-blue-50 hover:border-blue-600"
-              }`}
-            >
-              API Tokens
-            </Link>
-            <Link
               to="/documentation"
               className={`px-6 py-3 text-sm font-medium border-r-4 ${
                 isActive("/documentation")
@@ -68,6 +57,23 @@ const Navbar = () => {
               Documentation
             </Link>
           </div>
+        </div>
+
+        {/* API Token Section */}
+        <div className="border-t py-4 px-6">
+          <div className="text-xs font-medium text-gray-500 mb-2">
+            API Access
+          </div>
+          <Link
+            to="/api-tokens"
+            className={`block px-6 py-3 -mx-6 text-sm font-medium border-r-4 ${
+              isActive("/api-tokens")
+                ? "text-blue-600 border-blue-600 bg-blue-50"
+                : "text-gray-500 border-transparent hover:text-blue-600 hover:bg-blue-50 hover:border-blue-600"
+            }`}
+          >
+            API Tokens
+          </Link>
         </div>
       </nav>
 
