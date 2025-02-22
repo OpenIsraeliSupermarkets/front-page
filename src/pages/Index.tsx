@@ -117,7 +117,7 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-primary text-white">
+      <section className="py-24 bg-primary text-white w-screen relative left-1/2 right-1/2 -mx-[50vw]">
         <div className="container px-4 mx-auto text-center">
           <div className="max-w-2xl mx-auto animate-fade-up">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">

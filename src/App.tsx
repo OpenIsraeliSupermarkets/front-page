@@ -21,7 +21,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Navbar />
-          <div className="px-8 py-8">
+          <div>
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/documentation" element={<Documentation />} />
