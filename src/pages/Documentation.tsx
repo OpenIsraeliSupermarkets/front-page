@@ -124,17 +124,17 @@ const endpoints = [
   {
     title: "List Chains",
     description: "Retrieve a list of available supermarket chains",
-    path: "/list_chains/v0",
+    path: "raw/list_chains",
   },
   {
     title: "List File Types",
     description: "Get a list of available file types",
-    path: "/list_file_types/v0",
+    path: "raw/list_file_types",
   },
   {
     title: "List Files",
     description: "Get a list of files for a specific chain",
-    path: "/list_files/v0",
+    path: "raw/list_files",
     parameters: {
       chain: "string (required) - Supermarket chain name",
       file_type: "string (optional) - Filter by file type",
@@ -143,7 +143,7 @@ const endpoints = [
   {
     title: "File Content",
     description: "Retrieve the content of a specific file",
-    path: "/file_content/v0",
+    path: "raw/file_content",
     parameters: {
       chain: "string (required) - Supermarket chain name",
       file: "string (required) - File name to retrieve",
