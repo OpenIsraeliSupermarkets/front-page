@@ -46,7 +46,7 @@ const Navbar = () => {
           {user ? (
             <>
               <div className="text-sm font-medium text-gray-900 break-words">
-                {user.name}
+                {user.firstName} {user.lastName}
               </div>
               <div className="text-xs text-gray-500 break-words mb-2">
                 {user.email}

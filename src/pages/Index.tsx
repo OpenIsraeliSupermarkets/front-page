@@ -31,7 +31,7 @@ const Index = () => {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <button
-              onClick={() => navigate("/docs")}
+              onClick={() => navigate("/documentation")}
               className="px-8 py-3 font-semibold text-white bg-primary rounded-lg hover-lift"
             >
               Get Started

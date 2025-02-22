@@ -8,6 +8,8 @@ import {
 import { supabase } from "@/lib/supabase";
 
 interface User {
+  firstName: string;
+  lastName: string;
   name: string;
   email: string;
   apiToken?: string;
@@ -15,7 +17,7 @@ interface User {
 
 interface UserContextType {
   user: User | null;
-  setUser: (user: User | null) => void;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -35,8 +37,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
+        const userData = session.user.user_metadata;
         setUser({
-          name: session.user.email || "משתמש אנונימי",
+          firstName: userData?.first_name || "",
+          lastName: userData?.last_name || "",
+          name: userData?.full_name || session.user.email || "משתמש אנונימי",
           email: session.user.email || "",
           apiToken: session.access_token,
         });
@@ -48,8 +53,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
+        const userData = session.user.user_metadata;
         setUser({
-          name: session.user.email || "משתמש אנונימי",
+          firstName: userData?.first_name || "",
+          lastName: userData?.last_name || "",
+          name: userData?.full_name || session.user.email || "משתמש אנונימי",
           email: session.user.email || "",
           apiToken: session.access_token,
         });
