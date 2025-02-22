@@ -25,6 +25,9 @@ const Index = () => {
             Unlocking Israeli Supermarket Data
             <br /> for Everyone
           </h1>
+          <span className="inline-block px-4 py-1.5 mb-6 text-lg font-semibold tracking-wider text-green-700 uppercase rounded-full bg-green-100">
+            Free - No Credit Card Required
+          </span>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
             Making supermarket data accessible, standardized, and actionable for
             researchers, developers, and consumers.
