@@ -35,15 +35,18 @@ RUN apt-get update && apt-get install -y \
     g++ \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --chown=node:node package*.json ./
-RUN npm ci
-COPY --chown=node:node . .
+COPY package*.json ./
+RUN chown -R node:node /app && \
+    npm ci
+COPY . .
+RUN chown -R node:node /app
 USER node
 RUN npm run build
 
 # שלב ייצור
 FROM base AS production
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/src/server.js ./dist/
 COPY package*.json ./
 
 # התקנת תלויות נדרשות לייצור
@@ -59,4 +62,4 @@ ENV PORT=3000
 
 EXPOSE 3000
 USER node
-CMD ["node", "--experimental-json-modules", "dist/server.js"]
+CMD ["node", "dist/server.js"]

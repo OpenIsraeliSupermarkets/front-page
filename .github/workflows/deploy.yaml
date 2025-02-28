@@ -26,17 +26,10 @@ jobs:
       #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          # push: true
-          tags: ${{ env.DOCKER_IMAGE }}:latest
-
+        run: |
+          docker compose build
       - name: Deploy to Runner
-        run: docker stop israeli-grocery-insight || true
-          docker rm israeli-grocery-insight || true
-          docker run -d \
-          --name israeli-grocery-insight \
-          --restart unless-stopped \
-          -p 8000:8000 \
-          ${{ env.DOCKER_IMAGE }}:latest
+        run: |
+          docker compose down || true
+          docker compose pull
+          docker compose up -d
