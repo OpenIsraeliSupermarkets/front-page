@@ -34,8 +34,15 @@ const Documentation = () => {
 
             <h3 className="text-lg font-medium mb-4">Authentication</h3>
             <p className="text-muted-foreground mb-4">
-              All requests require authentication using a Bearer Token. Add the
-              token in the Authorization header:
+              All requests require authentication using a Bearer Token. You can
+              get your free API token by{" "}
+              <a href="/signup" className="text-primary hover:underline">
+                signing up here
+              </a>
+              . No credit card required - our API is completely free to use.
+            </p>
+            <p className="text-muted-foreground mb-4">
+              Add the token in the Authorization header:
             </p>
             <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm">
               <code>Authorization: Bearer YOUR_API_TOKEN</code>
