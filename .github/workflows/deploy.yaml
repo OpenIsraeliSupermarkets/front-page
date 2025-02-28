@@ -27,9 +27,11 @@ jobs:
 
       - name: Build and push Docker image
         run: |
+          echo "Current working directory: $PWD"
           docker compose build
       - name: Deploy to Runner
         run: |
+          echo "Current working directory: $PWD"
           docker compose down || true
           docker compose pull
           docker compose up -d
