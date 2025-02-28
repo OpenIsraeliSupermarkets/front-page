@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: List home directory
+        run: ls -la /home
       - name: Checkout code
         uses: actions/checkout@v4
 
