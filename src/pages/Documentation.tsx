@@ -28,8 +28,17 @@ const Documentation = () => {
             <p className="text-muted-foreground mb-4">
               All API requests should be made to the base URL:
             </p>
+            <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm mb-6">
+              <code>https://api.supermarket-data.org</code>
+            </div>
+
+            <h3 className="text-lg font-medium mb-4">Authentication</h3>
+            <p className="text-muted-foreground mb-4">
+              All requests require authentication using a Bearer Token. Add the
+              token in the Authorization header:
+            </p>
             <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm">
-              <code>https://api.supermarket-data.org/v0</code>
+              <code>Authorization: Bearer YOUR_API_TOKEN</code>
             </div>
           </div>
         </section>
@@ -54,7 +63,7 @@ const Documentation = () => {
                   </p>
                 </div>
                 <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                  GET
+                  {endpoint.method}
                 </span>
               </div>
               <div className="mb-4">
@@ -124,29 +133,69 @@ const endpoints = [
   {
     title: "List Chains",
     description: "Retrieve a list of available supermarket chains",
-    path: "raw/list_chains",
+    path: "/list_chains",
+    method: "GET",
+    security: "Bearer Token",
+    response: {
+      "200": {
+        type: "object",
+        properties: {
+          list_of_chains: "string[]",
+        },
+      },
+    },
   },
   {
     title: "List File Types",
     description: "Get a list of available file types",
-    path: "raw/list_file_types",
+    path: "/list_file_types",
+    method: "GET",
+    security: "Bearer Token",
+    response: {
+      "200": {
+        type: "object",
+        properties: {
+          list_of_file_types: "string[]",
+        },
+      },
+    },
   },
   {
-    title: "List Files",
+    title: "List Scraped Files",
     description: "Get a list of files for a specific chain",
-    path: "raw/list_files",
+    path: "/list_scraped_files",
+    method: "GET",
+    security: "Bearer Token",
     parameters: {
       chain: "string (required) - Supermarket chain name",
       file_type: "string (optional) - Filter by file type",
+    },
+    response: {
+      "200": {
+        type: "object",
+        properties: {
+          processed_files: "ScrapedFile[]",
+        },
+      },
     },
   },
   {
     title: "File Content",
     description: "Retrieve the content of a specific file",
-    path: "raw/file_content",
+    path: "/raw/file_content",
+    method: "GET",
+    security: "Bearer Token",
     parameters: {
       chain: "string (required) - Supermarket chain name",
       file: "string (required) - File name to retrieve",
+    },
+    response: {
+      "200": {
+        type: "object",
+        properties: {
+          rows: "RawFileContent[]",
+        },
+      },
     },
   },
 ];
@@ -154,9 +203,18 @@ const endpoints = [
 const codeExamples = [
   {
     language: "JavaScript/TypeScript",
-    code: `// List all available chains
+    code: `// API configuration
+const API_BASE_URL = 'https://api.supermarket-data.org';
+const API_TOKEN = 'YOUR_API_TOKEN';
+
+const headers = {
+  'Authorization': \`Bearer \${API_TOKEN}\`,
+  'Content-Type': 'application/json'
+};
+
+// List all available chains
 async function listChains() {
-  const response = await fetch('https://api.supermarket-data.org/v0/list_chains/v0');
+  const response = await fetch(\`\${API_BASE_URL}/list_chains\`, { headers });
   return await response.json();
 }
 
@@ -166,7 +224,8 @@ async function listFiles(chain, fileType = null) {
   if (fileType) params.append('file_type', fileType);
   
   const response = await fetch(
-    \`https://api.supermarket-data.org/v0/list_files/v0?\${params}\`
+    \`\${API_BASE_URL}/list_scraped_files?\${params}\`,
+    { headers }
   );
   return await response.json();
 }`,
@@ -175,9 +234,21 @@ async function listFiles(chain, fileType = null) {
     language: "Python",
     code: `import requests
 
+# API configuration
+API_BASE_URL = 'https://api.supermarket-data.org'
+API_TOKEN = 'YOUR_API_TOKEN'
+
+headers = {
+    'Authorization': f'Bearer {API_TOKEN}',
+    'Content-Type': 'application/json'
+}
+
 # List all available chains
 def list_chains():
-    response = requests.get('https://api.supermarket-data.org/v0/list_chains/v0')
+    response = requests.get(
+        f'{API_BASE_URL}/list_chains',
+        headers=headers
+    )
     return response.json()
 
 # Get files for a specific chain
@@ -187,7 +258,8 @@ def list_files(chain, file_type=None):
         params['file_type'] = file_type
         
     response = requests.get(
-        'https://api.supermarket-data.org/v0/list_files/v0',
+        f'{API_BASE_URL}/list_scraped_files',
+        headers=headers,
         params=params
     )
     return response.json()`,
@@ -195,10 +267,11 @@ def list_files(chain, file_type=None):
 ];
 
 const quickStartSteps = [
-  "Start by calling /list_chains/v0 to get available supermarket chains",
-  "Use /list_file_types/v0 to see what types of files are available",
-  "Get a list of files for your chosen chain using /list_files/v0",
-  "Retrieve file contents using /file_content/v0 with the chain and file name",
+  "Get your API token from the system",
+  "Start by calling /list_chains to get available supermarket chains",
+  "Use /list_file_types to see what types of files are available",
+  "Get a list of files for your chosen chain using /list_scraped_files",
+  "Retrieve file contents using /raw/file_content with the chain and file name",
   "Handle responses appropriately and implement error handling",
   "Consider caching responses when appropriate to improve performance",
 ];
