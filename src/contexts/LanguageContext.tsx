@@ -401,13 +401,24 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [language, setLanguage] = useState("en");
   const [direction, setDirection] = useState<"ltr" | "rtl">("ltr");
+  const [isChanging, setIsChanging] = useState(false);
 
   const handleLanguageChange = (lang: string) => {
-    setLanguage(lang);
-    i18n.changeLanguage(lang);
-    setDirection(lang === "he" ? "rtl" : "ltr");
-    document.documentElement.dir = lang === "he" ? "rtl" : "ltr";
-    document.documentElement.lang = lang;
+    setIsChanging(true);
+
+    // Wait for fade out to complete before changing language
+    setTimeout(() => {
+      setLanguage(lang);
+      i18n.changeLanguage(lang);
+      setDirection(lang === "he" ? "rtl" : "ltr");
+      document.documentElement.dir = lang === "he" ? "rtl" : "ltr";
+      document.documentElement.lang = lang;
+
+      // Remove fade out after language change
+      setTimeout(() => {
+        setIsChanging(false);
+      }, 300);
+    }, 300);
   };
 
   useEffect(() => {
@@ -418,7 +429,12 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
     <LanguageContext.Provider
       value={{ language, setLanguage: handleLanguageChange, direction }}
     >
-      {children}
+      <div className="relative">
+        {children}
+        {isChanging && (
+          <div className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm animate-fade-out" />
+        )}
+      </div>
     </LanguageContext.Provider>
   );
 };
