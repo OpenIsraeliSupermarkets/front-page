@@ -1,19 +1,18 @@
-version: '3.8'
+version: "3.8"
 
 services:
-
   # סביבת ייצור
   website:
     build:
       context: .
       target: production
     ports:
-      - "3000:3000"
+      - "80:80"
     environment:
       - NODE_ENV=production
       - HOST=0.0.0.0
-      - PORT=3000
+      - PORT=80
     restart: unless-stopped
 
 volumes:
-  node_modules: 
+  node_modules:
