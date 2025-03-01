@@ -15,7 +15,7 @@ const API = () => {
         // Construct the target URL
         const targetUrl = new URL(
           path + location.search,
-          "http://erlichsefi.ddns.net:8080"
+          import.meta.env.VITE_API_URL
         );
 
         // Forward the request and get the response
@@ -23,7 +23,7 @@ const API = () => {
           method: "GET",
           headers: {
             Accept: "application/json",
-            Host: new URL("http://erlichsefi.ddns.net:8080").host,
+            Host: new URL(import.meta.env.VITE_API_URL).host,
           },
         });
 
