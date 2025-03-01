@@ -6,6 +6,8 @@ import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
 import { BackButton } from "@/components/BackButton";
 import { useUser } from "@/contexts/UserContext";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface APIToken {
   id: string;
@@ -19,6 +21,8 @@ const APITokens = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user } = useUser();
+  const { t } = useTranslation();
+  const { direction } = useLanguage();
   const [tokenName, setTokenName] = useState("");
   const [generatedToken, setGeneratedToken] = useState<string | null>(null);
   const [tokens, setTokens] = useState<APIToken[]>([]);
@@ -36,8 +40,8 @@ const APITokens = () => {
       if (error) {
         toast({
           variant: "destructive",
-          title: "Error",
-          description: "Failed to load tokens",
+          title: t("errorTitle"),
+          description: t("errorLoadTokens"),
         });
         return;
       }
@@ -46,14 +50,14 @@ const APITokens = () => {
     };
 
     loadTokens();
-  }, [user, toast]);
+  }, [user, toast, t]);
 
   const handleCreateToken = async () => {
     if (!user) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "You must be logged in to create a token",
+        title: t("errorTitle"),
+        description: t("errorMustLogin"),
       });
       return;
     }
@@ -61,8 +65,8 @@ const APITokens = () => {
     if (!tokenName.trim()) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Please enter a token name",
+        title: t("errorTitle"),
+        description: t("errorEnterName"),
       });
       return;
     }
@@ -78,8 +82,8 @@ const APITokens = () => {
     if (error) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Failed to create token",
+        title: t("errorTitle"),
+        description: t("errorCreateToken"),
       });
       return;
     }
@@ -98,8 +102,8 @@ const APITokens = () => {
     }
 
     toast({
-      title: "Token Created",
-      description: "Token created successfully.",
+      title: t("tokenCreated"),
+      description: t("tokenCreatedDesc"),
     });
   };
 
@@ -107,8 +111,8 @@ const APITokens = () => {
     if (!user) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "You must be logged in to deactivate a token",
+        title: t("errorTitle"),
+        description: t("errorMustLogin"),
       });
       return;
     }
@@ -121,8 +125,8 @@ const APITokens = () => {
     if (error) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Failed to deactivate token",
+        title: t("errorTitle"),
+        description: t("errorDeactivateToken"),
       });
       return;
     }
@@ -134,68 +138,73 @@ const APITokens = () => {
     );
 
     toast({
-      title: "Token Deactivated",
-      description: "Token has been deactivated.",
+      title: t("tokenDeactivated"),
+      description: t("tokenDeactivatedDesc"),
     });
   };
 
   return (
-    <div className="container max-w-2xl mx-auto py-8 px-4">
+    <div className="container max-w-2xl mx-auto py-8 px-4" dir={direction}>
       <BackButton />
       <div className="pt-16">
-        <h1 className="text-3xl font-bold mb-8">API Tokens</h1>
+        <h1 className="text-3xl font-bold mb-8">{t("apiTokensTitle")}</h1>
 
         {!user && (
           <div className="p-6 border rounded-lg bg-card mb-6">
-            <h2 className="text-xl font-semibold mb-4">
-              Authentication Required
-            </h2>
+            <h2 className="text-xl font-semibold mb-4">{t("authRequired")}</h2>
             <p className="text-muted-foreground mb-4">
-              You need to be logged in to create and manage tokens.
+              {t("authRequiredDesc")}
             </p>
-            <Button onClick={() => navigate("/")}>Login</Button>
+            <Button onClick={() => navigate("/")}>{t("login")}</Button>
           </div>
         )}
 
         {user && (
           <div className="space-y-6">
             <div className="p-6 border rounded-lg bg-card">
-              <h2 className="text-xl font-semibold mb-4">Create New Token</h2>
+              <h2 className="text-xl font-semibold mb-4">
+                {t("createNewToken")}
+              </h2>
               <div className="space-y-4">
                 <div>
                   <label
                     htmlFor="tokenName"
                     className="block text-sm font-medium mb-2"
                   >
-                    Token Name
+                    {t("tokenName")}
                   </label>
                   <Input
                     id="tokenName"
-                    placeholder="Enter token name"
+                    placeholder={t("enterTokenName")}
                     value={tokenName}
                     onChange={(e) => setTokenName(e.target.value)}
                   />
                 </div>
-                <Button onClick={handleCreateToken}>Generate Token</Button>
+                <Button onClick={handleCreateToken}>
+                  {t("generateToken")}
+                </Button>
               </div>
             </div>
 
             {generatedToken && (
               <div className="p-6 border rounded-lg bg-card">
-                <h2 className="text-xl font-semibold mb-4">Your New Token</h2>
+                <h2 className="text-xl font-semibold mb-4">
+                  {t("yourNewToken")}
+                </h2>
                 <div className="bg-muted p-4 rounded-md break-all font-mono text-sm">
                   {generatedToken}
                 </div>
                 <p className="text-sm text-muted-foreground mt-2">
-                  Make sure to copy this token now. You won't be able to see it
-                  again!
+                  {t("copyTokenWarning")}
                 </p>
               </div>
             )}
 
             {tokens.length > 0 && (
               <div className="p-6 border rounded-lg bg-card">
-                <h2 className="text-xl font-semibold mb-4">Your Tokens</h2>
+                <h2 className="text-xl font-semibold mb-4">
+                  {t("yourTokens")}
+                </h2>
                 <div className="space-y-4">
                   {tokens.map((token) => (
                     <div
@@ -205,15 +214,19 @@ const APITokens = () => {
                       <div>
                         <p className="font-medium">{token.name}</p>
                         <p className="text-sm text-muted-foreground">
-                          Created:{" "}
+                          {t("created")}{" "}
                           {new Date(token.created_at).toLocaleDateString()}
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          Status:{" "}
+                          {t("status")}{" "}
                           {token.is_active ? (
-                            <span className="text-green-600">Active</span>
+                            <span className="text-green-600">
+                              {t("active")}
+                            </span>
                           ) : (
-                            <span className="text-red-600">Inactive</span>
+                            <span className="text-red-600">
+                              {t("inactive")}
+                            </span>
                           )}
                         </p>
                       </div>
@@ -222,7 +235,7 @@ const APITokens = () => {
                           variant="destructive"
                           onClick={() => handleDeactivateToken(token.id)}
                         >
-                          Deactivate
+                          {t("deactivate")}
                         </Button>
                       )}
                     </div>
@@ -238,7 +251,7 @@ const APITokens = () => {
           className="mt-8"
           onClick={() => navigate("/")}
         >
-          Back to Home
+          {t("backToHome")}
         </Button>
       </div>
     </div>
