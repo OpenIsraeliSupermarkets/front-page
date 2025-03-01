@@ -37,12 +37,34 @@ const Navbar = () => {
 
       {/* Navigation - middle z-index */}
       <nav
-        className={`bg-white shadow-lg fixed right-0 top-0 h-full w-48 transform transition-transform duration-300 ease-in-out z-50 ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`bg-white shadow-lg fixed left-0 top-0 h-full transform transition-transform duration-300 ease-in-out z-50 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } w-[85vw] sm:w-64 md:w-72 lg:w-80 max-w-sm`}
       >
+        {/* Close Button */}
+        <button
+          onClick={() => setIsOpen(false)}
+          className="absolute right-4 top-4 p-2 rounded-md hover:bg-gray-100"
+          aria-label="Close menu"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+
         {/* User Info Section */}
-        <div className="py-4 px-6 border-b">
+        <div className="pt-16 px-6 border-b">
           {user ? (
             <>
               <div className="text-sm font-medium text-gray-900 break-words">
@@ -53,7 +75,7 @@ const Navbar = () => {
               </div>
               <button
                 onClick={handleLogout}
-                className="text-xs text-red-500 hover:text-red-700 cursor-pointer"
+                className="text-xs text-red-500 hover:text-red-700 cursor-pointer mb-4"
               >
                 Logout
               </button>
@@ -61,7 +83,7 @@ const Navbar = () => {
           ) : (
             <button
               onClick={() => setShowAuthDialog(true)}
-              className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer"
+              className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer mb-4"
             >
               Login / Register
             </button>
@@ -115,8 +137,8 @@ const Navbar = () => {
       {/* Button - highest z-index */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed right-4 top-4 z-[60] p-2 rounded-md bg-white hover:bg-gray-100"
-        aria-label="Toggle menu"
+        className="fixed left-4 top-4 z-[60] p-2 rounded-md bg-white hover:bg-gray-100 shadow-md"
+        aria-label="Open menu"
       >
         <svg
           className="w-6 h-6"
@@ -125,21 +147,12 @@ const Navbar = () => {
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {isOpen ? (
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          ) : (
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          )}
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 6h16M4 12h16M4 18h16"
+          />
         </svg>
       </button>
     </>
