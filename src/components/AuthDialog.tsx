@@ -13,13 +13,15 @@ interface AuthDialogProps {
   onClose: () => void;
 }
 
+type AuthMode = "login" | "register" | "reset-password";
+
 export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [isRegister, setIsRegister] = useState(false);
+  const [mode, setMode] = useState<AuthMode>("login");
   const { toast } = useToast();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -30,7 +32,7 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
     setIsLoading(true);
 
     try {
-      if (isRegister) {
+      if (mode === "register") {
         const { error } = await supabase.auth.signUp({
           email,
           password,
@@ -47,7 +49,7 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
           title: t("registrationSuccess"),
           description: t("checkEmail"),
         });
-      } else {
+      } else if (mode === "login") {
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -58,12 +60,21 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
           description: t("welcomeBack"),
         });
         navigate("/api-tokens");
+      } else if (mode === "reset-password") {
+        const { error } = await supabase.auth.resetPasswordForEmail(email);
+        if (error) throw error;
+        toast({
+          title: t("resetPasswordSuccess"),
+          description: t("resetPasswordDesc"),
+        });
+        setMode("login");
       }
       onClose();
     } catch (error) {
       toast({
         variant: "destructive",
-        title: t("authError"),
+        title:
+          mode === "reset-password" ? t("resetPasswordError") : t("authError"),
         description: t("invalidCredentials"),
         className:
           "bg-white text-destructive font-bold border-2 border-destructive shadow-lg",
@@ -73,16 +84,25 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
     }
   };
 
+  const getTitle = () => {
+    switch (mode) {
+      case "register":
+        return t("createAccount");
+      case "reset-password":
+        return t("resetPassword");
+      default:
+        return t("loginTitle");
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md" dir={direction}>
         <DialogHeader>
-          <DialogTitle>
-            {isRegister ? t("createAccount") : t("loginTitle")}
-          </DialogTitle>
+          <DialogTitle>{getTitle()}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {isRegister && (
+          {mode === "register" && (
             <>
               <div>
                 <Input
@@ -90,7 +110,7 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
                   placeholder={t("firstName")}
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  required={isRegister}
+                  required={mode === "register"}
                 />
               </div>
               <div>
@@ -99,7 +119,7 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
                   placeholder={t("lastName")}
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  required={isRegister}
+                  required={mode === "register"}
                 />
               </div>
             </>
@@ -113,30 +133,54 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
               required
             />
           </div>
-          <div>
-            <Input
-              type="password"
-              placeholder={t("password")}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+          {mode !== "reset-password" && (
+            <div>
+              <Input
+                type="password"
+                placeholder={t("password")}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required={mode !== "reset-password"}
+              />
+            </div>
+          )}
           <div className="flex flex-col space-y-2">
             <Button type="submit" disabled={isLoading}>
               {isLoading
                 ? t("processing")
-                : isRegister
+                : mode === "register"
                 ? t("register")
+                : mode === "reset-password"
+                ? t("resetPassword")
                 : t("login")}
             </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => setIsRegister(!isRegister)}
-            >
-              {isRegister ? t("haveAccount") : t("noAccount")}
-            </Button>
+            {mode === "login" && (
+              <>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setMode("register")}
+                >
+                  {t("noAccount")}
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setMode("reset-password")}
+                >
+                  {t("forgotPassword")}
+                </Button>
+              </>
+            )}
+            {(mode === "register" || mode === "reset-password") && (
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setMode("login")}
+              >
+                {t("backToLogin")}
+              </Button>
+            )}
           </div>
         </form>
       </DialogContent>

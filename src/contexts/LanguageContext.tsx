@@ -162,6 +162,15 @@ i18n.use(initReactI18next).init({
         authError: "Authentication Error",
         invalidCredentials: "Invalid login credentials. Please try again.",
 
+        // Password Reset
+        forgotPassword: "Forgot Password?",
+        resetPassword: "Reset Password",
+        resetPasswordSuccess: "Password reset email sent!",
+        resetPasswordError: "Failed to send reset password email",
+        resetPasswordDesc:
+          "Please check your email for password reset instructions.",
+        backToLogin: "Back to Login",
+
         // Endpoints
         listChains: "List Chains",
         listChainsDesc: "Retrieve a list of available supermarket chains",
@@ -335,6 +344,14 @@ i18n.use(initReactI18next).init({
         welcomeBack: "ברוך שובך!",
         authError: "שגיאת אימות",
         invalidCredentials: "פרטי ההתחברות שגויים. אנא נסה שוב.",
+
+        // Password Reset
+        forgotPassword: "שכחת סיסמה?",
+        resetPassword: "איפוס סיסמה",
+        resetPasswordSuccess: "נשלח מייל לאיפוס סיסמה!",
+        resetPasswordError: "שגיאה בשליחת מייל לאיפוס סיסמה",
+        resetPasswordDesc: "אנא בדוק את תיבת הדואר שלך להוראות איפוס הסיסמה.",
+        backToLogin: "חזרה להתחברות",
 
         // Endpoints
         listChains: "רשימת רשתות",
