@@ -59,9 +59,9 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description:
-          error instanceof Error ? error.message : "Authentication failed",
+        title: "Authentication Error",
+        description: "Invalid login credentials. Please try again.",
+        className: "bg-white text-destructive font-bold border-2 border-destructive shadow-lg"
       });
     } finally {
       setIsLoading(false);
