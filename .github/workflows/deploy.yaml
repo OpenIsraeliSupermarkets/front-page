@@ -10,7 +10,7 @@ env:
 
 jobs:
   build-and-deploy:
-    runs-on: front-end
+    runs-on: [self-hosted, front-end]
 
     steps:
       - name: List home directory
