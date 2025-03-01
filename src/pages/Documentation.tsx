@@ -29,7 +29,7 @@ const Documentation = () => {
               All API requests should be made to the base URL:
             </p>
             <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm mb-6">
-              <code>https://api.supermarket-data.org</code>
+              <code>https://open-israeli-supermarket.co.il/api</code>
             </div>
 
             <h3 className="text-lg font-medium mb-4">Authentication</h3>
