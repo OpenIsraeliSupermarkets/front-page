@@ -13,8 +13,10 @@ jobs:
     runs-on: [self-hosted, front-end]
 
     steps:
-      - name: List home directory
-        run: ls -la /home
+      - name: Adding env variables
+        run: |
+          echo "SUPABASE_URL=${{ secrets.VITE_SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
+          echo "SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}" >> $GITHUB_ENV
       - name: Checkout code
         uses: actions/checkout@v4
 
