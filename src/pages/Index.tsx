@@ -1,14 +1,18 @@
 import { Database, ChartBar, Users, Code, ArrowUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { AuthDialog } from "@/components/AuthDialog";
 
 const Index = () => {
   const navigate = useNavigate();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
+  const { t } = useTranslation();
+  const { direction } = useLanguage();
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" dir={direction}>
       <AuthDialog
         isOpen={showAuthDialog}
         onClose={() => setShowAuthDialog(false)}
@@ -19,31 +23,29 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
         <div className="container px-4 mx-auto text-center z-10 animate-fade-up">
           <span className="inline-block px-4 py-1.5 mb-6 text-sm font-semibold tracking-wider text-primary uppercase rounded-full bg-primary/10">
-            Open Source Initiative
+            {t("openSourceInitiative")}
           </span>
           <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">
-            Unlocking Israeli Supermarket Data
-            <br /> for Everyone
+            {t("heroTitle")}
           </h1>
           <span className="inline-block px-4 py-1.5 mb-6 text-lg font-semibold tracking-wider text-green-700 uppercase rounded-full bg-green-100">
-            Free - No Credit Card Required
+            {t("freeNoCard")}
           </span>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            Making supermarket data accessible, standardized, and actionable for
-            researchers, developers, and consumers.
+            {t("heroDescription")}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <button
               onClick={() => navigate("/documentation")}
               className="px-8 py-3 font-semibold text-white bg-primary rounded-lg hover-lift"
             >
-              Get Started
+              {t("getStarted")}
             </button>
             <button
               onClick={() => setShowAuthDialog(true)}
               className="px-8 py-3 font-semibold border border-primary/20 rounded-lg hover-lift"
             >
-              Get API key
+              {t("getApiKey")}
             </button>
           </div>
         </div>
@@ -54,25 +56,28 @@ const Index = () => {
         <div className="container px-4 mx-auto">
           <div className="text-center mb-16 animate-fade-up">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Key Features
+              {t("keyFeatures")}
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Comprehensive tools and features designed to make supermarket data
-              accessible and useful.
+              {t("featuresDescription")}
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
               <div
-                key={feature.title}
+                key={feature.titleKey}
                 className="glass-card p-6 rounded-xl hover-lift animate-fade-up"
                 style={{
                   animationDelay: `${index * 100}ms`,
                 }}
               >
                 <feature.icon className="w-12 h-12 text-primary mb-4" />
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
+                <h3 className="text-xl font-semibold mb-2">
+                  {t(feature.titleKey)}
+                </h3>
+                <p className="text-muted-foreground">
+                  {t(feature.descriptionKey)}
+                </p>
               </div>
             ))}
           </div>
@@ -84,29 +89,31 @@ const Index = () => {
         <div className="container px-4 mx-auto">
           <div className="text-center mb-16 animate-fade-up">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Who We Support
+              {t("whoWeSupport")}
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Our platform serves diverse needs across multiple sectors.
+              {t("audiencesDescription")}
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {audiences.map((audience, index) => (
               <div
-                key={audience.title}
+                key={audience.titleKey}
                 className="p-8 rounded-xl border border-border hover-lift animate-fade-up"
                 style={{
                   animationDelay: `${index * 100}ms`,
                 }}
               >
                 <h3 className="text-2xl font-semibold mb-4">
-                  {audience.title}
+                  {t(audience.titleKey)}
                 </h3>
                 <ul className="space-y-3">
-                  {audience.benefits.map((benefit, i) => (
+                  {audience.benefitKeys.map((benefitKey, i) => (
                     <li key={i} className="flex items-start gap-3">
                       <ArrowUp className="w-5 h-5 text-primary shrink-0 rotate-45" />
-                      <span className="text-muted-foreground">{benefit}</span>
+                      <span className="text-muted-foreground">
+                        {t(benefitKey)}
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -121,11 +128,10 @@ const Index = () => {
         <div className="container px-4 mx-auto text-center">
           <div className="max-w-2xl mx-auto animate-fade-up">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Join Our Community
+              {t("joinCommunity")}
             </h2>
             <p className="text-primary-foreground/80 mb-8">
-              Be part of the movement to make supermarket data accessible to
-              everyone. Contribute, learn, and build with us.
+              {t("ctaDescription")}
             </p>
             <a
               href="https://discord.gg/qtJyuwKy"
@@ -133,7 +139,7 @@ const Index = () => {
               rel="noopener noreferrer"
               className="inline-block px-8 py-3 font-semibold bg-white text-primary rounded-lg hover-lift"
             >
-              Get Involved
+              {t("getInvolved")}
             </a>
           </div>
         </div>
@@ -145,63 +151,61 @@ const Index = () => {
 const features = [
   {
     icon: Database,
-    title: "Data Collection",
-    description:
-      "Comprehensive and reliable data fetched directly from supermarket sources.",
+    titleKey: "dataCollection",
+    descriptionKey: "dataCollectionDesc",
   },
   {
     icon: ChartBar,
-    title: "Analytics",
-    description:
-      "Track prices and promotions over time with detailed insights.",
+    titleKey: "analytics",
+    descriptionKey: "analyticsDesc",
   },
   {
     icon: Code,
-    title: "API Access",
-    description: "Flexible integration options with programmatic data access.",
+    titleKey: "apiAccess",
+    descriptionKey: "apiAccessDesc",
   },
   {
     icon: Users,
-    title: "Community",
-    description: "Join a growing community of developers and researchers.",
+    titleKey: "community",
+    descriptionKey: "communityDesc",
   },
 ];
 
 const audiences = [
   {
-    title: "For Researchers",
-    benefits: [
-      "Access comprehensive historical data",
-      "Analyze price trends and patterns",
-      "Export data in research-friendly formats",
-      "Connect with other academic users",
+    titleKey: "forResearchers",
+    benefitKeys: [
+      "researcherBenefit1",
+      "researcherBenefit2",
+      "researcherBenefit3",
+      "researcherBenefit4",
     ],
   },
   {
-    title: "For Developers",
-    benefits: [
-      "Integrate with our robust API",
-      "Access standardized data structures",
-      "Build innovative applications",
-      "Contribute to open-source tools",
+    titleKey: "forDevelopers",
+    benefitKeys: [
+      "developerBenefit1",
+      "developerBenefit2",
+      "developerBenefit3",
+      "developerBenefit4",
     ],
   },
   {
-    title: "For Consumers",
-    benefits: [
-      "Make informed purchasing decisions",
-      "Track price changes over time",
-      "Compare prices across stores",
-      "Stay updated on promotions",
+    titleKey: "forConsumers",
+    benefitKeys: [
+      "consumerBenefit1",
+      "consumerBenefit2",
+      "consumerBenefit3",
+      "consumerBenefit4",
     ],
   },
   {
-    title: "For Social Entrepreneurs",
-    benefits: [
-      "Drive social impact initiatives",
-      "Analyze market accessibility",
-      "Promote price transparency",
-      "Support community projects",
+    titleKey: "forSocialEntrepreneurs",
+    benefitKeys: [
+      "socialBenefit1",
+      "socialBenefit2",
+      "socialBenefit3",
+      "socialBenefit4",
     ],
   },
 ];

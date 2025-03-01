@@ -1,16 +1,21 @@
 import { Code2, Key, Database, PlayCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { BackButton } from "@/components/BackButton";
 
 const Documentation = () => {
+  const { t } = useTranslation();
+  const { direction } = useLanguage();
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" dir={direction}>
       <BackButton />
       {/* Header */}
       <div className="border-b pt-16">
         <div className="container py-8 px-4">
-          <h1 className="text-4xl font-bold mb-4">API Documentation</h1>
+          <h1 className="text-4xl font-bold mb-4">{t("apiDocumentation")}</h1>
           <p className="text-lg text-muted-foreground">
-            Complete guide to integrating with the Israeli Supermarket Data API
+            {t("apiDocDescription")}
           </p>
         </div>
       </div>
@@ -21,29 +26,24 @@ const Documentation = () => {
         <section className="mb-16 animate-fade-up">
           <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
             <Key className="w-6 h-6" />
-            Getting Started
+            {t("gettingStarted")}
           </h2>
           <div className="glass-card rounded-lg p-6">
-            <h3 className="text-lg font-medium mb-4">Base URL</h3>
-            <p className="text-muted-foreground mb-4">
-              All API requests should be made to the base URL:
-            </p>
+            <h3 className="text-lg font-medium mb-4">{t("baseUrl")}</h3>
+            <p className="text-muted-foreground mb-4">{t("baseUrlDesc")}</p>
             <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm mb-6">
               <code>https://open-israeli-supermarket.co.il/api</code>
             </div>
 
-            <h3 className="text-lg font-medium mb-4">Authentication</h3>
+            <h3 className="text-lg font-medium mb-4">{t("authentication")}</h3>
             <p className="text-muted-foreground mb-4">
-              All requests require authentication using a Bearer Token. You can
-              get your free API token by{" "}
+              {t("authDesc")}{" "}
               <a href="/signup" className="text-primary hover:underline">
-                signing up here
+                {t("signUpHere")}
               </a>
-              . No credit card required - our API is completely free to use.
+              . {t("noCardRequired")}
             </p>
-            <p className="text-muted-foreground mb-4">
-              Add the token in the Authorization header:
-            </p>
+            <p className="text-muted-foreground mb-4">{t("addToken")}</p>
             <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm">
               <code>Authorization: Bearer YOUR_API_TOKEN</code>
             </div>
@@ -54,19 +54,21 @@ const Documentation = () => {
         <section className="mb-16 animate-fade-up">
           <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
             <Database className="w-6 h-6" />
-            API Endpoints
+            {t("apiEndpoints")}
           </h2>
           {endpoints.map((endpoint, index) => (
             <div
-              key={endpoint.path}
+              key={endpoint.titleKey}
               className="glass-card rounded-lg p-6 mb-6 last:mb-0"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="text-lg font-medium mb-2">{endpoint.title}</h3>
+                  <h3 className="text-lg font-medium mb-2">
+                    {t(endpoint.titleKey)}
+                  </h3>
                   <p className="text-muted-foreground">
-                    {endpoint.description}
+                    {t(endpoint.descriptionKey)}
                   </p>
                 </div>
                 <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
@@ -95,7 +97,7 @@ const Documentation = () => {
         <section className="mb-16 animate-fade-up">
           <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
             <Code2 className="w-6 h-6" />
-            Code Examples
+            {t("codeExamples")}
           </h2>
           {codeExamples.map((example, index) => (
             <div
@@ -115,7 +117,7 @@ const Documentation = () => {
         <section className="animate-fade-up">
           <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
             <PlayCircle className="w-6 h-6" />
-            Quick Start Guide
+            {t("quickStartGuide")}
           </h2>
           <div className="glass-card rounded-lg p-6">
             <ol className="space-y-4 list-decimal list-inside text-muted-foreground">
@@ -138,8 +140,8 @@ const Documentation = () => {
 
 const endpoints = [
   {
-    title: "List Chains",
-    description: "Retrieve a list of available supermarket chains",
+    titleKey: "listChains",
+    descriptionKey: "listChainsDesc",
     path: "/list_chains",
     method: "GET",
     security: "Bearer Token",
@@ -153,8 +155,8 @@ const endpoints = [
     },
   },
   {
-    title: "List File Types",
-    description: "Get a list of available file types",
+    titleKey: "listFileTypes",
+    descriptionKey: "listFileTypesDesc",
     path: "/list_file_types",
     method: "GET",
     security: "Bearer Token",
@@ -168,8 +170,8 @@ const endpoints = [
     },
   },
   {
-    title: "List Scraped Files",
-    description: "Get a list of files for a specific chain",
+    titleKey: "listScrapedFiles",
+    descriptionKey: "listScrapedFilesDesc",
     path: "/list_scraped_files",
     method: "GET",
     security: "Bearer Token",
@@ -187,8 +189,8 @@ const endpoints = [
     },
   },
   {
-    title: "File Content",
-    description: "Retrieve the content of a specific file",
+    titleKey: "fileContent",
+    descriptionKey: "fileContentDesc",
     path: "/raw/file_content",
     method: "GET",
     security: "Bearer Token",

@@ -1,12 +1,16 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useUser } from "../contexts/UserContext";
+import { useLanguage } from "../contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/lib/supabase";
 import { AuthDialog } from "@/components/AuthDialog";
 
 const Navbar = () => {
   const location = useLocation();
   const { user } = useUser();
+  const { language, setLanguage, direction } = useLanguage();
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
@@ -18,6 +22,10 @@ const Navbar = () => {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/");
+  };
+
+  const toggleLanguage = () => {
+    setLanguage(language === "en" ? "he" : "en");
   };
 
   return (
@@ -37,14 +45,23 @@ const Navbar = () => {
 
       {/* Navigation - middle z-index */}
       <nav
-        className={`bg-white shadow-lg fixed left-0 top-0 h-full transform transition-transform duration-300 ease-in-out z-50 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`bg-white shadow-lg fixed ${
+          direction === "rtl" ? "right-0" : "left-0"
+        } top-0 h-full transform transition-transform duration-300 ease-in-out z-50 ${
+          isOpen
+            ? "translate-x-0"
+            : direction === "rtl"
+            ? "translate-x-full"
+            : "-translate-x-full"
         } w-[85vw] sm:w-64 md:w-72 lg:w-80 max-w-sm`}
+        dir={direction}
       >
         {/* Close Button */}
         <button
           onClick={() => setIsOpen(false)}
-          className="absolute right-4 top-4 p-2 rounded-md hover:bg-gray-100"
+          className={`absolute ${
+            direction === "rtl" ? "left-4" : "right-4"
+          } top-4 p-2 rounded-md hover:bg-gray-100`}
           aria-label="Close menu"
         >
           <svg
@@ -63,6 +80,16 @@ const Navbar = () => {
           </svg>
         </button>
 
+        {/* Language Toggle */}
+        <button
+          onClick={toggleLanguage}
+          className={`absolute ${
+            direction === "rtl" ? "left-16" : "right-16"
+          } top-4 p-2 rounded-md hover:bg-gray-100`}
+        >
+          {language === "en" ? "עב" : "EN"}
+        </button>
+
         {/* User Info Section */}
         <div className="pt-16 px-6 border-b">
           {user ? (
@@ -77,7 +104,7 @@ const Navbar = () => {
                 onClick={handleLogout}
                 className="text-xs text-red-500 hover:text-red-700 cursor-pointer mb-4"
               >
-                Logout
+                {t("logout")}
               </button>
             </>
           ) : (
@@ -85,7 +112,7 @@ const Navbar = () => {
               onClick={() => setShowAuthDialog(true)}
               className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer mb-4"
             >
-              Login / Register
+              {t("login")}
             </button>
           )}
         </div>
@@ -95,23 +122,27 @@ const Navbar = () => {
           <div className="flex flex-col">
             <Link
               to="/"
-              className={`px-6 py-3 text-sm font-medium border-r-4 ${
+              className={`px-6 py-3 text-sm font-medium border-${
+                direction === "rtl" ? "l" : "r"
+              }-4 ${
                 isActive("/")
                   ? "text-blue-600 border-blue-600 bg-blue-50"
                   : "text-gray-500 border-transparent hover:text-blue-600 hover:bg-blue-50 hover:border-blue-600"
               }`}
             >
-              Home
+              {t("home")}
             </Link>
             <Link
               to="/documentation"
-              className={`px-6 py-3 text-sm font-medium border-r-4 ${
+              className={`px-6 py-3 text-sm font-medium border-${
+                direction === "rtl" ? "l" : "r"
+              }-4 ${
                 isActive("/documentation")
                   ? "text-blue-600 border-blue-600 bg-blue-50"
                   : "text-gray-500 border-transparent hover:text-blue-600 hover:bg-blue-50 hover:border-blue-600"
               }`}
             >
-              Documentation
+              {t("documentation")}
             </Link>
           </div>
         </div>
@@ -119,17 +150,19 @@ const Navbar = () => {
         {/* API Token Section */}
         <div className="border-t py-4 px-6">
           <div className="text-xs font-medium text-gray-500 mb-2">
-            API Access
+            {t("apiAccess")}
           </div>
           <Link
             to="/api-tokens"
-            className={`block px-6 py-3 -mx-6 text-sm font-medium border-r-4 ${
+            className={`block px-6 py-3 -mx-6 text-sm font-medium border-${
+              direction === "rtl" ? "l" : "r"
+            }-4 ${
               isActive("/api-tokens")
                 ? "text-blue-600 border-blue-600 bg-blue-50"
                 : "text-gray-500 border-transparent hover:text-blue-600 hover:bg-blue-50 hover:border-blue-600"
             }`}
           >
-            API Tokens
+            {t("apiTokens")}
           </Link>
         </div>
       </nav>
@@ -137,7 +170,9 @@ const Navbar = () => {
       {/* Button - highest z-index */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed left-4 top-4 z-[60] p-2 rounded-md bg-white hover:bg-gray-100 shadow-md"
+        className={`fixed ${
+          direction === "rtl" ? "right-4" : "left-4"
+        } top-4 z-[60] p-2 rounded-md bg-white hover:bg-gray-100 shadow-md`}
         aria-label="Open menu"
       >
         <svg

@@ -10,28 +10,31 @@ import APITokens from "./pages/APITokens";
 import API from "./pages/API";
 import Navbar from "./components/Navbar";
 import { UserProvider } from "./contexts/UserContext";
+import { LanguageProvider } from "./contexts/LanguageContext";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <UserProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Navbar />
-          <div>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/documentation" element={<Documentation />} />
-              <Route path="/api-tokens" element={<APITokens />} />
-              <Route path="/api/*" element={<API />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </div>
-        </BrowserRouter>
-      </TooltipProvider>
+      <LanguageProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Navbar />
+            <div>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/documentation" element={<Documentation />} />
+                <Route path="/api-tokens" element={<APITokens />} />
+                <Route path="/api/*" element={<API />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </div>
+          </BrowserRouter>
+        </TooltipProvider>
+      </LanguageProvider>
     </UserProvider>
   </QueryClientProvider>
 );

@@ -5,6 +5,8 @@ import { Button } from "./ui/button";
 import { useToast } from "./ui/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface AuthDialogProps {
   isOpen: boolean;
@@ -20,6 +22,8 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
   const [isRegister, setIsRegister] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { direction } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,8 +44,8 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
         });
         if (error) throw error;
         toast({
-          title: "Registration successful!",
-          description: "Please check your email to verify your account.",
+          title: t("registrationSuccess"),
+          description: t("checkEmail"),
         });
       } else {
         const { error } = await supabase.auth.signInWithPassword({
@@ -50,8 +54,8 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
         });
         if (error) throw error;
         toast({
-          title: "Login successful!",
-          description: "Welcome back!",
+          title: t("loginSuccess"),
+          description: t("welcomeBack"),
         });
         navigate("/api-tokens");
       }
@@ -59,9 +63,10 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Authentication Error",
-        description: "Invalid login credentials. Please try again.",
-        className: "bg-white text-destructive font-bold border-2 border-destructive shadow-lg"
+        title: t("authError"),
+        description: t("invalidCredentials"),
+        className:
+          "bg-white text-destructive font-bold border-2 border-destructive shadow-lg",
       });
     } finally {
       setIsLoading(false);
@@ -70,10 +75,10 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md" dir={direction}>
         <DialogHeader>
           <DialogTitle>
-            {isRegister ? "Create an account" : "Login"}
+            {isRegister ? t("createAccount") : t("loginTitle")}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -82,7 +87,7 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
               <div>
                 <Input
                   type="text"
-                  placeholder="First Name"
+                  placeholder={t("firstName")}
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   required={isRegister}
@@ -91,7 +96,7 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
               <div>
                 <Input
                   type="text"
-                  placeholder="Last Name"
+                  placeholder={t("lastName")}
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   required={isRegister}
@@ -102,7 +107,7 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
           <div>
             <Input
               type="email"
-              placeholder="Email"
+              placeholder={t("email")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -111,7 +116,7 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
           <div>
             <Input
               type="password"
-              placeholder="Password"
+              placeholder={t("password")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -119,16 +124,18 @@ export function AuthDialog({ isOpen, onClose }: AuthDialogProps) {
           </div>
           <div className="flex flex-col space-y-2">
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Processing..." : isRegister ? "Register" : "Login"}
+              {isLoading
+                ? t("processing")
+                : isRegister
+                ? t("register")
+                : t("login")}
             </Button>
             <Button
               type="button"
               variant="ghost"
               onClick={() => setIsRegister(!isRegister)}
             >
-              {isRegister
-                ? "Already have an account? Login"
-                : "Don't have an account? Register"}
+              {isRegister ? t("haveAccount") : t("noAccount")}
             </Button>
           </div>
         </form>
