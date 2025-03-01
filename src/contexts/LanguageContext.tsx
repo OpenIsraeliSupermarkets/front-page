@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
+import { initReactI18next, useTranslation } from "react-i18next";
 
 // Define the context type
 type LanguageContextType = {
@@ -171,6 +171,30 @@ i18n.use(initReactI18next).init({
         listScrapedFilesDesc: "Get a list of files for a specific chain",
         fileContent: "File Content",
         fileContentDesc: "Retrieve the content of a specific file",
+
+        // FAQ Section
+        faqTitle: "Frequently Asked Questions",
+        faqDescription:
+          "Find answers to the most common questions about using our data and service.",
+        howOftenUpdated: "How often is the data updated?",
+        howOftenUpdatedAnswer:
+          "Our data is updated multiple times daily to ensure you have access to the most current supermarket prices and promotions.",
+
+        dataUsage: "How can I use this data?",
+        dataUsageAnswer:
+          "The data can be used for research, price comparison applications, market analysis, and consumer awareness initiatives. We provide both raw data access and processed analytics.",
+
+        apiLimits: "Are there any API rate limits?",
+        apiLimitsAnswer:
+          "Our free tier includes generous API limits suitable for most use cases. We implement fair use policies to ensure service availability for all users.",
+
+        dataAccuracy: "How accurate is the data?",
+        dataAccuracyAnswer:
+          "Our data is sourced directly from official supermarket price databases and verified through automated validation processes. We maintain high accuracy standards and promptly correct any discrepancies.",
+
+        privacyPolicy: "What about data privacy?",
+        privacyPolicyAnswer:
+          "We adhere to strict privacy guidelines. The data we collect is publicly available pricing information and does not include any personal data.",
       },
     },
     he: {
@@ -321,6 +345,30 @@ i18n.use(initReactI18next).init({
         listScrapedFilesDesc: "קבלת רשימת קבצים עבור רשת ספציפית",
         fileContent: "תוכן קובץ",
         fileContentDesc: "קבלת התוכן של קובץ ספציפי",
+
+        // FAQ Section
+        faqTitle: "שאלות נפוצות",
+        faqDescription:
+          "תשובות לשאלות הנפוצות ביותר על השימוש במידע ובשירות שלנו",
+        howOftenUpdated: "באיזו תדירות המידע מתעדכן?",
+        howOftenUpdatedAnswer:
+          "המידע שלנו מתעדכן מספר פעמים ביום כדי להבטיח שיש לכם גישה למחירי סופרמרקט ומבצעים עדכניים ביותר.",
+
+        dataUsage: "כיצד ניתן להשתמש במידע?",
+        dataUsageAnswer:
+          "ניתן להשתמש במידע למחקר, אפליקציות השוואת מחירים, ניתוח שוק ויוזמות להעלאת מודעות צרכנית. אנו מספקים גם גישה לנתונים גולמיים וגם לניתוחים מעובדים.",
+
+        apiLimits: "האם יש מגבלות על השימוש ב-API?",
+        apiLimitsAnswer:
+          "החבילה החינמית שלנו כוללת מכסות API נדיבות המתאימות לרוב השימושים. אנו מיישמים מדיניות שימוש הוגן כדי להבטיח זמינות השירות לכל המשתמשים.",
+
+        dataAccuracy: "מה רמת הדיוק של המידע?",
+        dataAccuracyAnswer:
+          "המידע שלנו מגיע ישירות ממאגרי המחירים הרשמיים של רשתות השיווק ועובר תהליכי אימות אוטומטיים. אנו שומרים על סטנדרטים גבוהים של דיוק ומתקנים במהירות כל אי-התאמה.",
+
+        privacyPolicy: "מה לגבי פרטיות המידע?",
+        privacyPolicyAnswer:
+          "אנו מקפידים על הנחיות פרטיות קפדניות. המידע שאנו אוספים הוא מידע מחירים פומבי ואינו כולל נתונים אישיים כלשהם.",
       },
     },
   },

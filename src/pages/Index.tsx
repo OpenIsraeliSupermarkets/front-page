@@ -1,4 +1,12 @@
-import { Database, ChartBar, Users, Code, ArrowUp } from "lucide-react";
+import {
+  Database,
+  ChartBar,
+  Users,
+  Code,
+  ArrowUp,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -8,6 +16,7 @@ import { AuthDialog } from "@/components/AuthDialog";
 const Index = () => {
   const navigate = useNavigate();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const { t } = useTranslation();
   const { direction } = useLanguage();
 
@@ -38,12 +47,14 @@ const Index = () => {
             <button
               onClick={() => navigate("/documentation")}
               className="px-8 py-3 font-semibold text-white bg-primary rounded-lg hover-lift"
+              aria-label={t("getStarted")}
             >
               {t("getStarted")}
             </button>
             <button
               onClick={() => setShowAuthDialog(true)}
-              className="px-8 py-3 font-semibold border border-primary/20 rounded-lg hover-lift"
+              className="px-8 py-3 font-semibold text-white bg-primary/90 border-2 border-primary rounded-lg hover-lift hover:bg-primary"
+              aria-label={t("getApiKey")}
             >
               {t("getApiKey")}
             </button>
@@ -71,7 +82,10 @@ const Index = () => {
                   animationDelay: `${index * 100}ms`,
                 }}
               >
-                <feature.icon className="w-12 h-12 text-primary mb-4" />
+                <feature.icon
+                  className="w-12 h-12 text-primary mb-4"
+                  aria-hidden="true"
+                />
                 <h3 className="text-xl font-semibold mb-2">
                   {t(feature.titleKey)}
                 </h3>
@@ -110,13 +124,65 @@ const Index = () => {
                 <ul className="space-y-3">
                   {audience.benefitKeys.map((benefitKey, i) => (
                     <li key={i} className="flex items-start gap-3">
-                      <ArrowUp className="w-5 h-5 text-primary shrink-0 rotate-45" />
+                      <ArrowUp
+                        className="w-5 h-5 text-primary shrink-0 rotate-45"
+                        aria-hidden="true"
+                      />
                       <span className="text-muted-foreground">
                         {t(benefitKey)}
                       </span>
                     </li>
                   ))}
                 </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-24 bg-secondary/30">
+        <div className="container px-4 mx-auto">
+          <div className="text-center mb-16 animate-fade-up">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              {t("faqTitle")}
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              {t("faqDescription")}
+            </p>
+          </div>
+          <div className="max-w-3xl mx-auto space-y-4">
+            {faqs.map((faq, index) => (
+              <div
+                key={index}
+                className="border border-border rounded-lg hover-lift animate-fade-up"
+                style={{
+                  animationDelay: `${index * 100}ms`,
+                }}
+              >
+                <button
+                  className="w-full px-6 py-4 flex items-center justify-between text-left"
+                  onClick={() =>
+                    setOpenFaqIndex(openFaqIndex === index ? null : index)
+                  }
+                  aria-expanded={openFaqIndex === index}
+                  aria-controls={`faq-${index}`}
+                >
+                  <span className="font-semibold">{t(faq.questionKey)}</span>
+                  {openFaqIndex === index ? (
+                    <ChevronUp className="w-5 h-5" aria-hidden="true" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5" aria-hidden="true" />
+                  )}
+                </button>
+                {openFaqIndex === index && (
+                  <div
+                    id={`faq-${index}`}
+                    className="px-6 pb-4 text-muted-foreground"
+                  >
+                    {t(faq.answerKey)}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -207,6 +273,29 @@ const audiences = [
       "socialBenefit3",
       "socialBenefit4",
     ],
+  },
+];
+
+const faqs = [
+  {
+    questionKey: "howOftenUpdated",
+    answerKey: "howOftenUpdatedAnswer",
+  },
+  {
+    questionKey: "dataUsage",
+    answerKey: "dataUsageAnswer",
+  },
+  {
+    questionKey: "apiLimits",
+    answerKey: "apiLimitsAnswer",
+  },
+  {
+    questionKey: "dataAccuracy",
+    answerKey: "dataAccuracyAnswer",
+  },
+  {
+    questionKey: "privacyPolicy",
+    answerKey: "privacyPolicyAnswer",
   },
 ];
 
