@@ -6,12 +6,21 @@ services:
     build:
       context: .
       target: production
+    hostname: website
     ports:
-      - "80:80"
+      - "3000:3000"
     environment:
       - NODE_ENV=production
       - HOST=0.0.0.0
-      - PORT=80
+      - PORT=3000
+    restart: unless-stopped
+
+  nginx:
+    build: ./nginx
+    ports:
+    - '80:80'
+    depends_on:
+      - website
     restart: unless-stopped
 
 volumes:
