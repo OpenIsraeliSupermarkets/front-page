@@ -3,6 +3,7 @@ version: "3.8"
 services:
   # סביבת ייצור
   website:
+    image: erlichsefi/israeli-grocery-insight:latest
     build:
       context: .
       target: production
