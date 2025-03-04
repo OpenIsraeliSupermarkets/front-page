@@ -17,6 +17,7 @@ services:
     restart: unless-stopped
 
   nginx:
+    image: erlichsefi/israeli-grocery-insight-nginx:latest
     build: ./nginx
     ports:
       - "80:80"
