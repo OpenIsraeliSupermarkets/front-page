@@ -2,6 +2,7 @@ FROM nginx:latest
 
 # העתקת קבצי התצורה והסקריפטים
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY sslnginx.conf /etc/nginx/sslnginx.conf
 COPY init-ssl.sh /docker-entrypoint.d/
 
 # התקנת תלויות מערכת

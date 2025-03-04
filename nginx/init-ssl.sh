@@ -20,5 +20,8 @@ chown -R www-data:www-data /etc/nginx/ssl
 chmod 600 /etc/letsencrypt/live/www.openisraelisupermarkets.co.il/privkey.pem
 chmod 644 /etc/letsencrypt/live/www.openisraelisupermarkets.co.il/fullchain.pem
 
+# change config to ssl
+cp /etc/nginx/sslnginx.conf /etc/nginx/nginx.conf
+
 # הפעלת Nginx
-nginx -g 'daemon off;' 
+nginx -s reload
