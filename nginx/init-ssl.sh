@@ -20,6 +20,12 @@ chown -R www-data:www-data /etc/nginx/ssl
 chmod 600 /etc/letsencrypt/live/www.openisraelisupermarkets.co.il/privkey.pem
 chmod 644 /etc/letsencrypt/live/www.openisraelisupermarkets.co.il/fullchain.pem
 
+# בדיקה אם התעודה כבר קיימת
+if [ -f "/etc/nginx/nginx.conf" ] && grep -q "ssl_certificate" "/etc/nginx/nginx.conf"; then
+    echo "תצורת SSL כבר מוגדרת. יוצא מהסקריפט..."
+    exit 0
+fi
+
 # change config to ssl
 cp /etc/nginx/sslnginx.conf /etc/nginx/nginx.conf
 
