@@ -53,7 +53,7 @@ const Index = () => {
             </button>
             <button
               onClick={() => setShowAuthDialog(true)}
-              className="px-8 py-3 font-semibold text-white bg-primary/90 border-2 border-primary rounded-lg hover-lift hover:bg-primary"
+              className="px-8 py-3 font-semibold text-white bg-primary rounded-lg hover-lift"
               aria-label={t("getApiKey")}
             >
               {t("getApiKey")}
