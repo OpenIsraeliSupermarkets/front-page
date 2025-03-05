@@ -8,10 +8,13 @@ const Documentation = () => {
   const { direction } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-background" dir={direction}>
+    <div
+      className="min-h-screen bg-background overflow-x-hidden"
+      dir={direction}
+    >
       <BackButton />
       {/* Header */}
-      <div className="border-b pt-16">
+      <div className="border-b pt-16 w-full">
         <div className="container py-8 px-4">
           <h1 className="text-4xl font-bold mb-4">{t("apiDocumentation")}</h1>
           <p className="text-lg text-muted-foreground">
@@ -77,15 +80,17 @@ const Documentation = () => {
               </div>
               <div className="mb-4">
                 <h4 className="text-sm font-medium mb-2">Endpoint</h4>
-                <div className="bg-secondary/50 p-3 rounded-md font-mono text-sm">
+                <div className="bg-secondary/50 p-3 rounded-md font-mono text-sm break-all">
                   <code>{endpoint.path}</code>
                 </div>
               </div>
               {endpoint.parameters && (
                 <div className="mb-4">
                   <h4 className="text-sm font-medium mb-2">Parameters</h4>
-                  <div className="bg-secondary/50 p-3 rounded-md font-mono text-sm">
-                    <pre>{JSON.stringify(endpoint.parameters, null, 2)}</pre>
+                  <div className="bg-secondary/50 p-3 rounded-md font-mono text-sm overflow-x-auto max-w-full">
+                    <pre className="whitespace-pre-wrap break-words">
+                      {JSON.stringify(endpoint.parameters, null, 2)}
+                    </pre>
                   </div>
                 </div>
               )}
@@ -106,8 +111,10 @@ const Documentation = () => {
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <h3 className="text-lg font-medium mb-4">{example.language}</h3>
-              <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm overflow-x-auto">
-                <pre>{example.code}</pre>
+              <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm overflow-x-auto max-w-full">
+                <pre className="whitespace-pre-wrap break-words">
+                  {example.code}
+                </pre>
               </div>
             </div>
           ))}
