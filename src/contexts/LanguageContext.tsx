@@ -25,6 +25,7 @@ i18n.use(initReactI18next).init({
         apiTokens: "API Tokens",
         login: "Login / Register",
         logout: "Logout",
+        socialLinks: "Social Links",
 
         // Hero Section
         openSourceInitiative: "Open Source Initiative",
@@ -214,6 +215,7 @@ i18n.use(initReactI18next).init({
         apiTokens: "מפתחות API",
         login: "התחברות / הרשמה",
         logout: "התנתקות",
+        socialLinks: "קישורים חברתיים",
 
         // Hero Section
         openSourceInitiative: "קוד פתוח",

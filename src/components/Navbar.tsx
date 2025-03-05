@@ -5,6 +5,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/lib/supabase";
 import { AuthDialog } from "@/components/AuthDialog";
+import { Github, Linkedin } from "lucide-react";
 
 const Navbar = () => {
   const location = useLocation();
@@ -164,6 +165,31 @@ const Navbar = () => {
           >
             {t("apiTokens")}
           </Link>
+        </div>
+
+        {/* Social Links */}
+        <div className="border-t py-4 px-6">
+          <div className="text-xs font-medium text-gray-500 mb-2">
+            {t("socialLinks")}
+          </div>
+          <div className="flex gap-4">
+            <a
+              href="https://github.com/OpenIsraeliSupermarkets"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:text-blue-600"
+            >
+              <Github className="w-6 h-6" />
+            </a>
+            <a
+              href="https://www.linkedin.com/company/open-israeli-supermarkets"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:text-blue-600"
+            >
+              <Linkedin className="w-6 h-6" />
+            </a>
+          </div>
         </div>
       </nav>
 
