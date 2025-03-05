@@ -2,10 +2,153 @@ import { Code2, Key, Database, PlayCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { BackButton } from "@/components/BackButton";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarProvider,
+} from "@/components/ui/sidebar";
+import { useState } from "react";
 
 const Documentation = () => {
   const { t } = useTranslation();
   const { direction } = useLanguage();
+  const [activeSection, setActiveSection] = useState("getting-started");
+
+  const sections = [
+    { id: "getting-started", icon: Key, title: t("gettingStarted") },
+    { id: "endpoints", icon: Database, title: t("apiEndpoints") },
+    { id: "code-examples", icon: Code2, title: t("codeExamples") },
+    { id: "quick-start", icon: PlayCircle, title: t("quickStartGuide") },
+  ];
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case "getting-started":
+        return (
+          <section className="animate-fade-up">
+            <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
+              <Key className="w-6 h-6" />
+              {t("gettingStarted")}
+            </h2>
+            <div className="glass-card rounded-lg p-6">
+              <h3 className="text-lg font-medium mb-4">{t("baseUrl")}</h3>
+              <p className="text-muted-foreground mb-4">{t("baseUrlDesc")}</p>
+              <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm mb-6">
+                <code>https://open-israeli-supermarket.co.il/api</code>
+              </div>
+
+              <h3 className="text-lg font-medium mb-4">
+                {t("authentication")}
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                {t("authDesc")}{" "}
+                <a href="/signup" className="text-primary hover:underline">
+                  {t("signUpHere")}
+                </a>
+                . {t("noCardRequired")}
+              </p>
+              <p className="text-muted-foreground mb-4">{t("addToken")}</p>
+              <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm">
+                <code>Authorization: Bearer YOUR_API_TOKEN</code>
+              </div>
+            </div>
+          </section>
+        );
+      case "endpoints":
+        return (
+          <section className="animate-fade-up">
+            <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
+              <Database className="w-6 h-6" />
+              {t("apiEndpoints")}
+            </h2>
+            {endpoints.map((endpoint, index) => (
+              <div
+                key={endpoint.titleKey}
+                className="glass-card rounded-lg p-6 mb-6 last:mb-0"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 className="text-lg font-medium mb-2">
+                      {t(endpoint.titleKey)}
+                    </h3>
+                    <p className="text-muted-foreground">
+                      {t(endpoint.descriptionKey)}
+                    </p>
+                  </div>
+                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                    {endpoint.method}
+                  </span>
+                </div>
+                <div className="mb-4">
+                  <h4 className="text-sm font-medium mb-2">Endpoint</h4>
+                  <div className="bg-secondary/50 p-3 rounded-md font-mono text-sm">
+                    <code>{endpoint.path}</code>
+                  </div>
+                </div>
+                {endpoint.parameters && (
+                  <div className="mb-4">
+                    <h4 className="text-sm font-medium mb-2">Parameters</h4>
+                    <div className="bg-secondary/50 p-3 rounded-md font-mono text-sm">
+                      <pre>{JSON.stringify(endpoint.parameters, null, 2)}</pre>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </section>
+        );
+      case "code-examples":
+        return (
+          <section className="animate-fade-up">
+            <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
+              <Code2 className="w-6 h-6" />
+              {t("codeExamples")}
+            </h2>
+            {codeExamples.map((example, index) => (
+              <div
+                key={example.language}
+                className="glass-card rounded-lg p-6 mb-6 last:mb-0"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <h3 className="text-lg font-medium mb-4">{example.language}</h3>
+                <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm overflow-x-auto">
+                  <pre>{example.code}</pre>
+                </div>
+              </div>
+            ))}
+          </section>
+        );
+      case "quick-start":
+        return (
+          <section className="animate-fade-up">
+            <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
+              <PlayCircle className="w-6 h-6" />
+              {t("quickStartGuide")}
+            </h2>
+            <div className="glass-card rounded-lg p-6">
+              <ol className="space-y-4 list-decimal list-inside text-muted-foreground">
+                {quickStartSteps.map((step, index) => (
+                  <li
+                    key={index}
+                    className="pl-2"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    {step}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </section>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background" dir={direction}>
@@ -20,119 +163,35 @@ const Documentation = () => {
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="container px-4 py-12">
-        {/* Getting Started */}
-        <section className="mb-16 animate-fade-up">
-          <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-            <Key className="w-6 h-6" />
-            {t("gettingStarted")}
-          </h2>
-          <div className="glass-card rounded-lg p-6">
-            <h3 className="text-lg font-medium mb-4">{t("baseUrl")}</h3>
-            <p className="text-muted-foreground mb-4">{t("baseUrlDesc")}</p>
-            <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm mb-6">
-              <code>https://open-israeli-supermarket.co.il/api</code>
-            </div>
-
-            <h3 className="text-lg font-medium mb-4">{t("authentication")}</h3>
-            <p className="text-muted-foreground mb-4">
-              {t("authDesc")}{" "}
-              <a href="/signup" className="text-primary hover:underline">
-                {t("signUpHere")}
-              </a>
-              . {t("noCardRequired")}
-            </p>
-            <p className="text-muted-foreground mb-4">{t("addToken")}</p>
-            <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm">
-              <code>Authorization: Bearer YOUR_API_TOKEN</code>
-            </div>
+      {/* Main Content with Sidebar */}
+      <div className="container px-4">
+        <SidebarProvider>
+          <div className="flex">
+            <Sidebar side={direction === "rtl" ? "right" : "left"}>
+              <SidebarHeader>
+                <h2 className="text-lg font-semibold px-4 py-2">
+                  {t("documentation")}
+                </h2>
+              </SidebarHeader>
+              <SidebarContent>
+                <SidebarMenu>
+                  {sections.map((section) => (
+                    <SidebarMenuItem key={section.id}>
+                      <SidebarMenuButton
+                        onClick={() => setActiveSection(section.id)}
+                        isActive={activeSection === section.id}
+                      >
+                        <section.icon className="w-4 h-4" />
+                        <span>{section.title}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarContent>
+            </Sidebar>
+            <div className="flex-1 py-12 px-6">{renderContent()}</div>
           </div>
-        </section>
-
-        {/* Endpoints */}
-        <section className="mb-16 animate-fade-up">
-          <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-            <Database className="w-6 h-6" />
-            {t("apiEndpoints")}
-          </h2>
-          {endpoints.map((endpoint, index) => (
-            <div
-              key={endpoint.titleKey}
-              className="glass-card rounded-lg p-6 mb-6 last:mb-0"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-medium mb-2">
-                    {t(endpoint.titleKey)}
-                  </h3>
-                  <p className="text-muted-foreground">
-                    {t(endpoint.descriptionKey)}
-                  </p>
-                </div>
-                <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                  {endpoint.method}
-                </span>
-              </div>
-              <div className="mb-4">
-                <h4 className="text-sm font-medium mb-2">Endpoint</h4>
-                <div className="bg-secondary/50 p-3 rounded-md font-mono text-sm">
-                  <code>{endpoint.path}</code>
-                </div>
-              </div>
-              {endpoint.parameters && (
-                <div className="mb-4">
-                  <h4 className="text-sm font-medium mb-2">Parameters</h4>
-                  <div className="bg-secondary/50 p-3 rounded-md font-mono text-sm">
-                    <pre>{JSON.stringify(endpoint.parameters, null, 2)}</pre>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </section>
-
-        {/* Code Examples */}
-        <section className="mb-16 animate-fade-up">
-          <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-            <Code2 className="w-6 h-6" />
-            {t("codeExamples")}
-          </h2>
-          {codeExamples.map((example, index) => (
-            <div
-              key={example.language}
-              className="glass-card rounded-lg p-6 mb-6 last:mb-0"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <h3 className="text-lg font-medium mb-4">{example.language}</h3>
-              <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm overflow-x-auto">
-                <pre>{example.code}</pre>
-              </div>
-            </div>
-          ))}
-        </section>
-
-        {/* Quick Start Guide */}
-        <section className="animate-fade-up">
-          <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-            <PlayCircle className="w-6 h-6" />
-            {t("quickStartGuide")}
-          </h2>
-          <div className="glass-card rounded-lg p-6">
-            <ol className="space-y-4 list-decimal list-inside text-muted-foreground">
-              {quickStartSteps.map((step, index) => (
-                <li
-                  key={index}
-                  className="pl-2"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  {step}
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
+        </SidebarProvider>
       </div>
     </div>
   );
