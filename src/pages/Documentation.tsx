@@ -34,7 +34,10 @@ const Documentation = () => {
           <div className="glass-card rounded-lg p-6">
             <h3 className="text-lg font-medium mb-4">{t("baseUrl")}</h3>
             <p className="text-muted-foreground mb-4">{t("baseUrlDesc")}</p>
-            <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm mb-6">
+            <div
+              className="bg-secondary/50 p-4 rounded-md font-mono text-sm mb-6"
+              dir="ltr"
+            >
               <code>https://open-israeli-supermarket.co.il/api</code>
             </div>
 
@@ -47,7 +50,10 @@ const Documentation = () => {
               . {t("noCardRequired")}
             </p>
             <p className="text-muted-foreground mb-4">{t("addToken")}</p>
-            <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm">
+            <div
+              className="bg-secondary/50 p-4 rounded-md font-mono text-sm"
+              dir="ltr"
+            >
               <code>Authorization: Bearer YOUR_API_TOKEN</code>
             </div>
           </div>
@@ -79,15 +85,25 @@ const Documentation = () => {
                 </span>
               </div>
               <div className="mb-4">
-                <h4 className="text-sm font-medium mb-2">Endpoint</h4>
-                <div className="bg-secondary/50 p-3 rounded-md font-mono text-sm break-all">
+                <h4 className="text-sm font-medium mb-2" dir="ltr">
+                  Endpoint
+                </h4>
+                <div
+                  className="bg-secondary/50 p-3 rounded-md font-mono text-sm break-all"
+                  dir="ltr"
+                >
                   <code>{endpoint.path}</code>
                 </div>
               </div>
               {endpoint.parameters && (
                 <div className="mb-4">
-                  <h4 className="text-sm font-medium mb-2">Parameters</h4>
-                  <div className="bg-secondary/50 p-3 rounded-md font-mono text-sm overflow-x-auto max-w-full">
+                  <h4 className="text-sm font-medium mb-2" dir="ltr">
+                    Parameters
+                  </h4>
+                  <div
+                    className="bg-secondary/50 p-3 rounded-md font-mono text-sm overflow-x-auto max-w-full"
+                    dir="ltr"
+                  >
                     <pre className="whitespace-pre-wrap break-words">
                       {JSON.stringify(endpoint.parameters, null, 2)}
                     </pre>
@@ -110,8 +126,13 @@ const Documentation = () => {
               className="glass-card rounded-lg p-6 mb-6 last:mb-0"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              <h3 className="text-lg font-medium mb-4">{example.language}</h3>
-              <div className="bg-secondary/50 p-4 rounded-md font-mono text-sm overflow-x-auto max-w-full">
+              <h3 className="text-lg font-medium mb-4" dir="ltr">
+                {example.language}
+              </h3>
+              <div
+                className="bg-secondary/50 p-4 rounded-md font-mono text-sm overflow-x-auto max-w-full"
+                dir="ltr"
+              >
                 <pre className="whitespace-pre-wrap break-words">
                   {example.code}
                 </pre>
