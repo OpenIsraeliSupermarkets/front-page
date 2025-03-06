@@ -205,6 +205,21 @@ i18n.use(initReactI18next).init({
         privacyPolicy: "What about data privacy?",
         privacyPolicyAnswer:
           "We adhere to strict privacy guidelines. The data we collect is publicly available pricing information and does not include any personal data.",
+
+        // Quick Start Guide Steps
+        getApiToken: "Get your API token from the system",
+        startListChains:
+          "Start by calling /list_chains to get available supermarket chains",
+        useListFileTypes:
+          "Use /list_file_types to see what types of files are available",
+        getFilesList:
+          "Get a list of files for your chosen chain using /list_scraped_files",
+        retrieveFileContents:
+          "Retrieve file contents using /raw/file_content with the chain and file name",
+        handleResponses:
+          "Handle responses appropriately and implement error handling",
+        considerCaching:
+          "Consider caching responses when appropriate to improve performance",
       },
     },
     he: {
@@ -388,6 +403,19 @@ i18n.use(initReactI18next).init({
         privacyPolicy: "מה לגבי פרטיות המידע?",
         privacyPolicyAnswer:
           "אנו מקפידים על הנחיות פרטיות קפדניות. המידע שאנו אוספים הוא מידע מחירים פומבי ואינו כולל נתונים אישיים כלשהם.",
+
+        // Quick Start Guide Steps
+        getApiToken: "קבל את מפתח ה-API שלך מהמערכת",
+        startListChains:
+          "התחל בקריאה ל-list_chains/ כדי לקבל את רשימת רשתות הסופרמרקט הזמינות",
+        useListFileTypes:
+          "השתמש ב-list_file_types/ כדי לראות אילו סוגי קבצים זמינים",
+        getFilesList:
+          "קבל רשימת קבצים עבור הרשת שבחרת באמצעות list_scraped_files/",
+        retrieveFileContents:
+          "אחזר תוכן קובץ באמצעות raw/file_content/ עם שם הרשת ושם הקובץ",
+        handleResponses: "טפל בתשובות בצורה נאותה והטמע טיפול בשגיאות",
+        considerCaching: "שקול שמירת תשובות במטמון כדי לשפר ביצועים",
       },
     },
   },

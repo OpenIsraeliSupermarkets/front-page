@@ -7,6 +7,16 @@ const Documentation = () => {
   const { t } = useTranslation();
   const { direction } = useLanguage();
 
+  const quickStartSteps = [
+    t("getApiToken"),
+    t("startListChains"),
+    t("useListFileTypes"),
+    t("getFilesList"),
+    t("retrieveFileContents"),
+    t("handleResponses"),
+    t("considerCaching"),
+  ];
+
   return (
     <div
       className="min-h-screen bg-background overflow-x-hidden"
@@ -301,16 +311,6 @@ def list_files(chain, file_type=None):
     )
     return response.json()`,
   },
-];
-
-const quickStartSteps = [
-  "Get your API token from the system",
-  "Start by calling /list_chains to get available supermarket chains",
-  "Use /list_file_types to see what types of files are available",
-  "Get a list of files for your chosen chain using /list_scraped_files",
-  "Retrieve file contents using /raw/file_content with the chain and file name",
-  "Handle responses appropriately and implement error handling",
-  "Consider caching responses when appropriate to improve performance",
 ];
 
 export default Documentation;
