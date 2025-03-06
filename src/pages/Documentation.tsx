@@ -251,7 +251,7 @@ const codeExamples = [
   {
     language: "JavaScript/TypeScript",
     code: `// API configuration
-const API_BASE_URL = 'https://api.supermarket-data.org';
+const API_BASE_URL = 'https://openisraelisupermarkets.co.il/api';
 const API_TOKEN = 'YOUR_API_TOKEN';
 
 const headers = {
