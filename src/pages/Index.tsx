@@ -298,7 +298,7 @@ const Index = () => {
               {t("ctaDescription")}
             </p>
             <a
-              href="https://discord.gg/qtJyuwKy"
+              href="https://discord.gg/qQx5nXxgKs"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block px-8 py-3 font-semibold bg-white text-primary rounded-lg hover-lift"
