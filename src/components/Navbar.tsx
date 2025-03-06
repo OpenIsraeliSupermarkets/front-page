@@ -5,7 +5,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/lib/supabase";
 import { AuthDialog } from "@/components/AuthDialog";
-import { Github, Linkedin } from "lucide-react";
+import { Github, Linkedin, Mail } from "lucide-react";
 
 const Navbar = () => {
   const location = useLocation();
@@ -37,18 +37,18 @@ const Navbar = () => {
       />
 
       {/* Overlay - lowest z-index */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
+      <div
+        className={`fixed inset-0 bg-black transition-opacity duration-500 ease-in-out z-40 ${
+          isOpen ? "opacity-50" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setIsOpen(false)}
+      />
 
       {/* Navigation - middle z-index */}
       <nav
         className={`bg-white shadow-lg fixed ${
           direction === "rtl" ? "right-0" : "left-0"
-        } top-0 h-full transform transition-transform duration-300 ease-in-out z-50 ${
+        } top-0 h-full transform transition-transform duration-500 ease-in-out z-50 ${
           isOpen
             ? "translate-x-0"
             : direction === "rtl"
@@ -123,6 +123,7 @@ const Navbar = () => {
           <div className="flex flex-col">
             <Link
               to="/"
+              onClick={() => setIsOpen(false)}
               className={`px-6 py-3 text-sm font-medium border-${
                 direction === "rtl" ? "l" : "r"
               }-4 ${
@@ -135,6 +136,7 @@ const Navbar = () => {
             </Link>
             <Link
               to="/documentation"
+              onClick={() => setIsOpen(false)}
               className={`px-6 py-3 text-sm font-medium border-${
                 direction === "rtl" ? "l" : "r"
               }-4 ${
@@ -155,6 +157,7 @@ const Navbar = () => {
           </div>
           <Link
             to="/api-tokens"
+            onClick={() => setIsOpen(false)}
             className={`block px-6 py-3 -mx-6 text-sm font-medium border-${
               direction === "rtl" ? "l" : "r"
             }-4 ${
@@ -188,6 +191,15 @@ const Navbar = () => {
               className="text-gray-500 hover:text-blue-600"
             >
               <Linkedin className="w-6 h-6" />
+            </a>
+          </div>
+          <div className="mt-4">
+            <a
+              href="mailto:erlichsefi@gmail.com"
+              className="flex items-center gap-2 text-gray-500 hover:text-blue-600"
+            >
+              <Mail className="w-5 h-5" />
+              <span className="text-sm">erlichsefi@gmail.com</span>
             </a>
           </div>
         </div>

@@ -26,6 +26,7 @@ i18n.use(initReactI18next).init({
         login: "Login / Register",
         logout: "Logout",
         socialLinks: "Social Links",
+        contact: "Contact Us",
 
         // Hero Section
         openSourceInitiative: "Open Source Initiative",
@@ -231,6 +232,7 @@ i18n.use(initReactI18next).init({
         login: "התחברות / הרשמה",
         logout: "התנתקות",
         socialLinks: "קישורים חברתיים",
+        contact: "צור קשר",
 
         // Hero Section
         openSourceInitiative: "קוד פתוח",
