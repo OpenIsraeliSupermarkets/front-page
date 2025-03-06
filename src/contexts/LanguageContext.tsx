@@ -56,6 +56,23 @@ i18n.use(initReactI18next).init({
         communityDesc:
           "Join a growing community of developers and researchers.",
 
+        // Plans Section
+        plansTitle: "Our Plans",
+        plansDescription: "Choose the plan that best fits your needs",
+        rawApiPlan: "Raw API Access",
+        rawApiDescription: "Direct access to our raw supermarket data API",
+        rawApiFeature1: "Unlimited access to raw supermarket data",
+        rawApiFeature2: "Real-time updates",
+        rawApiFeature3:
+          "Bring your own use case (forecasting, prediction, etc.)",
+        processedApiPlan: "Processed API Access",
+        processedApiDescription: "Enhanced API with advanced features",
+        processedApiFeature1: "Data standardization and normalization",
+        processedApiFeature2: "Natural language interface",
+        processedApiFeature3: "Complex queries and analytics support",
+        available: "Available Freely via Login",
+        beta: "Join Our Early Adopters",
+
         // Target Audiences
         whoWeSupport: "Who We Support",
         audiencesDescription:
@@ -258,6 +275,22 @@ i18n.use(initReactI18next).init({
         apiAccessDesc: "אפשרויות אינטגרציה גמישות עם גישה תכנותית לנתונים.",
         community: "קהילה",
         communityDesc: "הצטרפו לקהילה צומחת של מפתחים וחוקרים.",
+
+        // Plans Section
+        plansTitle: "התוכניות שלנו",
+        plansDescription: "בחרו את התוכנית המתאימה לצרכים שלכם",
+        rawApiPlan: "גישה ל-API גולמי",
+        rawApiDescription: "גישה ישירה ל-API של נתוני הסופרמרקט הגולמיים",
+        rawApiFeature1: "גישה בלתי מוגבלת לנתוני סופרמרקט גולמיים",
+        rawApiFeature2: "עדכונים בזמן אמת",
+        rawApiFeature3: "הביאו את השימוש שלכם (חיזוי, תחזיות וכו')",
+        processedApiPlan: "גישה ל-API מעובד",
+        processedApiDescription: "API משופר עם תכונות מתקדמות",
+        processedApiFeature1: "סטנדרטיזציה ונורמליזציה של נתונים",
+        processedApiFeature2: "ממשק שפה טבעית",
+        processedApiFeature3: "תמיכה בשאילתות מורכבות וניתוח",
+        available: "זמין בחינם עם התחברות",
+        beta: "הצטרף למאמצים המוקדמים",
 
         // Target Audiences
         whoWeSupport: "למי אנחנו עוזרים",

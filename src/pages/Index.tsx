@@ -140,6 +140,104 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Plans Section */}
+      <section className="py-24 bg-white">
+        <div className="container px-4 mx-auto">
+          <div className="text-center mb-16 animate-fade-up">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              {t("plansTitle")}
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              {t("plansDescription")}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="glass-card p-8 rounded-xl border border-border hover-lift animate-fade-up">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-2xl font-semibold">{t("rawApiPlan")}</h3>
+                <span className="px-4 py-1.5 rounded-full text-sm font-medium bg-green-100 text-green-800 whitespace-nowrap">
+                  {t("available")}
+                </span>
+              </div>
+              <p className="text-muted-foreground mb-6">
+                {t("rawApiDescription")}
+              </p>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3">
+                  <ArrowUp
+                    className="w-5 h-5 text-primary shrink-0 rotate-45"
+                    aria-hidden="true"
+                  />
+                  <span className="text-muted-foreground">
+                    {t("rawApiFeature1")}
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <ArrowUp
+                    className="w-5 h-5 text-primary shrink-0 rotate-45"
+                    aria-hidden="true"
+                  />
+                  <span className="text-muted-foreground">
+                    {t("rawApiFeature2")}
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <ArrowUp
+                    className="w-5 h-5 text-primary shrink-0 rotate-45"
+                    aria-hidden="true"
+                  />
+                  <span className="text-muted-foreground">
+                    {t("rawApiFeature3")}
+                  </span>
+                </li>
+              </ul>
+            </div>
+            <div className="glass-card p-8 rounded-xl border border-border hover-lift animate-fade-up">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-2xl font-semibold">
+                  {t("processedApiPlan")}
+                </h3>
+                <span className="px-4 py-1.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800 whitespace-nowrap cursor-pointer hover:bg-blue-200">
+                  {t("beta")}
+                </span>
+              </div>
+              <p className="text-muted-foreground mb-6">
+                {t("processedApiDescription")}
+              </p>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3">
+                  <ArrowUp
+                    className="w-5 h-5 text-primary shrink-0 rotate-45"
+                    aria-hidden="true"
+                  />
+                  <span className="text-muted-foreground">
+                    {t("processedApiFeature1")}
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <ArrowUp
+                    className="w-5 h-5 text-primary shrink-0 rotate-45"
+                    aria-hidden="true"
+                  />
+                  <span className="text-muted-foreground">
+                    {t("processedApiFeature2")}
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <ArrowUp
+                    className="w-5 h-5 text-primary shrink-0 rotate-45"
+                    aria-hidden="true"
+                  />
+                  <span className="text-muted-foreground">
+                    {t("processedApiFeature3")}
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section className="py-24 bg-secondary/30">
         <div className="container px-4 mx-auto">
