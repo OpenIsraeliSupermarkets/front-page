@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Playground = () => {
   const { t } = useTranslation();
+  const { direction } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [chains, setChains] = useState([]);
@@ -148,26 +150,15 @@ const Playground = () => {
   }, [selectedFile, selectedChain, t, headers]);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-100">
+    <div className="flex h-screen overflow-hidden bg-gray-100" dir={direction}>
       {/* Sidebar */}
-      <div className="w-64 min-w-[16rem] bg-white border-r border-gray-200 flex flex-col">
-        <div className="p-4 border-b border-gray-200 flex items-center">
-          <button className="p-2 hover:bg-gray-100 rounded-lg mr-2 lg:hidden">
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          </button>
-          <h1 className="text-xl font-bold text-blue-600">Playground</h1>
+      <div
+        className={`w-64 min-w-[16rem] bg-white border-${
+          direction === "rtl" ? "l" : "r"
+        } border-gray-200 flex flex-col`}
+      >
+        <div className="p-4 border-b border-gray-200">
+          <h1 className="text-xl font-bold text-blue-600">{t("playground")}</h1>
         </div>
 
         <div className="p-4 flex-1 overflow-y-auto space-y-6">
@@ -188,7 +179,11 @@ const Playground = () => {
                   </option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <div
+                className={`pointer-events-none absolute inset-y-0 ${
+                  direction === "rtl" ? "left-0" : "right-0"
+                } flex items-center px-2 text-gray-700`}
+              >
                 <svg
                   className="fill-current h-4 w-4"
                   xmlns="http://www.w3.org/2000/svg"
@@ -218,7 +213,11 @@ const Playground = () => {
                     </option>
                   ))}
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <div
+                  className={`pointer-events-none absolute inset-y-0 ${
+                    direction === "rtl" ? "left-0" : "right-0"
+                  } flex items-center px-2 text-gray-700`}
+                >
                   <svg
                     className="fill-current h-4 w-4"
                     xmlns="http://www.w3.org/2000/svg"
@@ -279,7 +278,11 @@ const Playground = () => {
           {fileContent && (
             <div className="h-full overflow-auto">
               <div className="inline-block min-w-full align-middle">
-                <table className="min-w-full divide-y divide-gray-200">
+                <table
+                  className={`min-w-full divide-y divide-gray-200 ${
+                    direction === "rtl" ? "text-right" : "text-left"
+                  }`}
+                >
                   <thead className="bg-gray-50">
                     <tr>
                       {fileContent.rows[0] &&
@@ -288,9 +291,17 @@ const Playground = () => {
                             <th
                               key={header}
                               onClick={() => requestSort(header)}
-                              className="group sticky top-0 bg-gray-50 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                              className={`group sticky top-0 bg-gray-50 px-6 py-3 ${
+                                direction === "rtl" ? "text-right" : "text-left"
+                              } text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors`}
                             >
-                              <div className="flex items-center space-x-1">
+                              <div
+                                className={`flex items-center space-x-1 ${
+                                  direction === "rtl"
+                                    ? "flex-row-reverse space-x-reverse"
+                                    : ""
+                                }`}
+                              >
                                 <span className="truncate">{header}</span>
                                 <span
                                   className={`transition-opacity shrink-0 ${
@@ -321,7 +332,9 @@ const Playground = () => {
                           (cell, cellIndex) => (
                             <td
                               key={cellIndex}
-                              className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                              className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${
+                                direction === "rtl" ? "text-right" : "text-left"
+                              }`}
                             >
                               {String(cell)}
                             </td>
