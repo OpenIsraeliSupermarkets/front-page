@@ -157,8 +157,12 @@ const Playground = () => {
           direction === "rtl" ? "l" : "r"
         } border-gray-200 flex flex-col`}
       >
-        <div className="p-4 border-b border-gray-200">
-          <h1 className="text-xl font-bold text-blue-600">{t("playground")}</h1>
+        <div className="pt-16 px-4 border-b border-gray-200">
+          <div className="flex justify-start items-center mb-4">
+            <h1 className="text-xl font-bold text-blue-600">
+              {t("playground")}
+            </h1>
+          </div>
         </div>
 
         <div className="p-4 flex-1 overflow-y-auto space-y-6">

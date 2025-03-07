@@ -244,6 +244,10 @@ const translations = {
         "Handle responses appropriately and implement error handling",
       considerCaching:
         "Consider caching responses when appropriate to improve performance",
+
+      chooseChain: "Choose Chain",
+      selectFileToView: "Select File to View",
+      chooseFile: "Choose File",
     },
   },
   he: {
@@ -287,7 +291,7 @@ const translations = {
         "נתונים מקיפים ואמינים הנאספים ישירות ממקורות הסופרמרקטים.",
       analytics: "אנליטיקה",
       analyticsDesc: "מעקב אחר מחירים ומבצעים לאורך זמן עם תובנות מפורטות.",
-      apiAccess: "גישת API",
+      apiAccess: "התחילו כאן",
       apiAccessDesc: "אפשרויות אינטגרציה גמישות עם גישה תכנותית לנתונים.",
       community: "קהילה",
       communityDesc: "הצטרפו לקהילה צומחת של מפתחים וחוקרים.",
@@ -466,6 +470,10 @@ const translations = {
         "אחזר תוכן קובץ באמצעות raw/file_content/ עם שם הרשת ושם הקובץ",
       handleResponses: "טפל בתשובות בצורה נאותה והטמע טיפול בשגיאות",
       considerCaching: "שקול שמירת תשובות במטמון כדי לשפר ביצועים",
+
+      chooseChain: "בחר רשת",
+      selectFileToView: "בחר קובץ לצפייה",
+      chooseFile: "בחר קובץ",
     },
   },
 };
