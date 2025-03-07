@@ -148,111 +148,193 @@ const Playground = () => {
   }, [selectedFile, selectedChain, t, headers]);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-7xl mx-auto">
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
-            {error}
-          </div>
-        )}
-
-        {loading && (
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-600">
-            {t("loading")}
-          </div>
-        )}
-
-        <div className="mb-8 bg-white p-6 rounded-lg shadow-sm">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-            {t("selectChain")}
-          </h2>
-          <select
-            value={selectedChain || ""}
-            onChange={(e) => setSelectedChain(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-          >
-            <option value="">{t("chooseChain")}</option>
-            {chains.map((chain) => (
-              <option key={chain} value={chain}>
-                {chain}
-              </option>
-            ))}
-          </select>
+    <div className="flex h-screen overflow-hidden bg-gray-100">
+      {/* Sidebar */}
+      <div className="w-64 min-w-[16rem] bg-white border-r border-gray-200 flex flex-col">
+        <div className="p-4 border-b border-gray-200 flex items-center">
+          <button className="p-2 hover:bg-gray-100 rounded-lg mr-2 lg:hidden">
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+          <h1 className="text-xl font-bold text-blue-600">Playground</h1>
         </div>
 
-        {selectedChain && (
-          <div className="mb-8 bg-white p-6 rounded-lg shadow-sm">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              {t("selectFile")}
-            </h2>
-            <select
-              value={selectedFile}
-              onChange={(e) => setSelectedFile(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-            >
-              <option value="">{t("chooseFile")}</option>
-              {files.map((file) => (
-                <option key={file} value={file}>
-                  {file}
-                </option>
-              ))}
-            </select>
+        <div className="p-4 flex-1 overflow-y-auto space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {t("selectChain")}
+            </label>
+            <div className="relative">
+              <select
+                value={selectedChain || ""}
+                onChange={(e) => setSelectedChain(e.target.value)}
+                className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm appearance-none"
+              >
+                <option value="">{t("chooseChain")}</option>
+                {chains.map((chain) => (
+                  <option key={chain} value={chain}>
+                    {chain}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                </svg>
+              </div>
+            </div>
           </div>
-        )}
 
-        {fileContent && (
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              {t("fileContent")}
-            </h2>
-            <div className="overflow-x-auto rounded-lg border border-gray-200">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    {fileContent.rows[0] &&
-                      Object.keys(fileContent.rows[0].row_content).map(
-                        (header) => (
-                          <th
-                            key={header}
-                            onClick={() => requestSort(header)}
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
-                          >
-                            <div className="flex items-center space-x-1">
-                              <span>{header}</span>
-                              {sortConfig.key === header && (
-                                <span className="text-blue-500">
-                                  {sortConfig.direction === "ascending"
-                                    ? "↑"
-                                    : "↓"}
-                                </span>
-                              )}
-                            </div>
-                          </th>
-                        )
-                      )}
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {sortedAndFilteredData.map((row, rowIndex) => (
-                    <tr
-                      key={row.row_index}
-                      className={rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                    >
-                      {Object.values(row.row_content).map((cell, cellIndex) => (
-                        <td
-                          key={cellIndex}
-                          className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                        >
-                          {String(cell)}
-                        </td>
-                      ))}
-                    </tr>
+          {selectedChain && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t("selectFile")}
+              </label>
+              <div className="relative">
+                <select
+                  value={selectedFile}
+                  onChange={(e) => setSelectedFile(e.target.value)}
+                  className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm appearance-none"
+                >
+                  <option value="">{t("chooseFile")}</option>
+                  {files.map((file) => (
+                    <option key={file} value={file}>
+                      {file}
+                    </option>
                   ))}
-                </tbody>
-              </table>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200">
+          <div className="px-6 py-4 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-900 truncate max-w-2xl">
+              {selectedFile || t("selectFileToView")}
+            </h2>
+            {loading && (
+              <div className="flex items-center text-blue-600 shrink-0">
+                <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+                {t("loading")}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="p-6">
+            <div className="p-4 bg-red-50 border-l-4 border-red-400 text-red-700">
+              <p className="font-medium">{error}</p>
             </div>
           </div>
         )}
+
+        {/* Table Content */}
+        <div className="flex-1 overflow-hidden">
+          {fileContent && (
+            <div className="h-full overflow-auto">
+              <div className="inline-block min-w-full align-middle">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      {fileContent.rows[0] &&
+                        Object.keys(fileContent.rows[0].row_content).map(
+                          (header) => (
+                            <th
+                              key={header}
+                              onClick={() => requestSort(header)}
+                              className="group sticky top-0 bg-gray-50 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                            >
+                              <div className="flex items-center space-x-1">
+                                <span className="truncate">{header}</span>
+                                <span
+                                  className={`transition-opacity shrink-0 ${
+                                    sortConfig.key === header
+                                      ? "opacity-100"
+                                      : "opacity-0 group-hover:opacity-50"
+                                  }`}
+                                >
+                                  {sortConfig.key === header
+                                    ? sortConfig.direction === "ascending"
+                                      ? "↑"
+                                      : "↓"
+                                    : "↕"}
+                                </span>
+                              </div>
+                            </th>
+                          )
+                        )}
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {sortedAndFilteredData.map((row, rowIndex) => (
+                      <tr
+                        key={row.row_index}
+                        className="hover:bg-blue-50 transition-colors"
+                      >
+                        {Object.values(row.row_content).map(
+                          (cell, cellIndex) => (
+                            <td
+                              key={cellIndex}
+                              className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                            >
+                              {String(cell)}
+                            </td>
+                          )
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
