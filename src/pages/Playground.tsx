@@ -14,7 +14,6 @@ const Playground = () => {
     key: "",
     direction: "ascending",
   });
-  const [filterText, setFilterText] = useState("");
 
   const headers = useMemo(
     () => ({
@@ -27,11 +26,7 @@ const Playground = () => {
   const sortedAndFilteredData = useMemo(() => {
     if (!fileContent?.rows) return [];
 
-    const filteredData = fileContent.rows.filter((row) =>
-      Object.values(row.row_content).some((value) =>
-        String(value).toLowerCase().includes(filterText.toLowerCase())
-      )
-    );
+    const filteredData = fileContent.rows;
 
     if (sortConfig.key) {
       filteredData.sort((a, b) => {
@@ -45,7 +40,7 @@ const Playground = () => {
       });
     }
     return filteredData;
-  }, [fileContent, sortConfig, filterText]);
+  }, [fileContent, sortConfig]);
 
   const requestSort = (key: string) => {
     setSortConfig((current) => ({
@@ -210,13 +205,6 @@ const Playground = () => {
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">
               {t("fileContent")}
             </h2>
-            <input
-              type="text"
-              placeholder={t("filterTable")}
-              value={filterText}
-              onChange={(e) => setFilterText(e.target.value)}
-              className="w-full px-4 py-2 mb-6 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-            />
             <div className="overflow-x-auto rounded-lg border border-gray-200">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
