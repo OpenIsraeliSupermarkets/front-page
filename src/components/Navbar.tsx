@@ -168,6 +168,19 @@ const Navbar = () => {
           >
             {t("apiTokens")}
           </Link>
+          <Link
+            to="/playground"
+            onClick={() => setIsOpen(false)}
+            className={`block px-6 py-3 -mx-6 text-sm font-medium border--${
+              direction === "rtl" ? "l" : "r"
+            }-4 ${
+              isActive("/playground")
+                ? "text-blue-600 border-blue-600 bg-blue-50"
+                : "text-gray-500 border-transparent hover:text-blue-600 hover:bg-blue-50 hover:border-blue-600"
+            }`}
+          >
+            {t("Playground")}
+          </Link>
         </div>
 
         {/* Social Links */}

@@ -8,6 +8,7 @@ import Documentation from "./pages/Documentation";
 import NotFound from "./pages/NotFound";
 import APITokens from "./pages/APITokens";
 import API from "./pages/API";
+import Playground from "./pages/Playground";
 import Navbar from "./components/Navbar";
 import { UserProvider } from "./contexts/UserContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
@@ -28,6 +29,7 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/documentation" element={<Documentation />} />
                 <Route path="/api-tokens" element={<APITokens />} />
+                <Route path="/playground" element={<Playground />} />
                 <Route path="/api/*" element={<API />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
