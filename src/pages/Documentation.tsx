@@ -48,7 +48,7 @@ const Documentation = () => {
               className="bg-secondary/50 p-4 rounded-md font-mono text-sm mb-6"
               dir="ltr"
             >
-              <code>https://open-israeli-supermarket.co.il/api</code>
+              <code>https://openisraelisupermarkets.co.il/api</code>
             </div>
 
             <h3 className="text-lg font-medium mb-4">{t("authentication")}</h3>
@@ -251,7 +251,7 @@ const codeExamples = [
   {
     language: "JavaScript/TypeScript",
     code: `// API configuration
-const API_BASE_URL = 'https://api.supermarket-data.org';
+const API_BASE_URL = 'https://www.openisraelisupermarkets.co.il/api';
 const API_TOKEN = 'YOUR_API_TOKEN';
 
 const headers = {
@@ -282,7 +282,7 @@ async function listFiles(chain, fileType = null) {
     code: `import requests
 
 # API configuration
-API_BASE_URL = 'https://api.supermarket-data.org'
+API_BASE_URL = 'https://www.openisraelisupermarkets.co.il/api'
 API_TOKEN = 'YOUR_API_TOKEN'
 
 headers = {
