@@ -11,7 +11,6 @@ const Playground = () => {
   const [selectedFile, setSelectedFile] = useState("");
   const [fileContent, setFileContent] = useState(null);
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const headers = useMemo(
     () => ({
       "Content-Type": "application/json",
@@ -25,7 +24,7 @@ const Playground = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch(`${API_BASE_URL}/list_chains`, {
+        const response = await fetch(`/api/list_chains`, {
           headers,
         });
         if (!response.ok) {
@@ -46,7 +45,7 @@ const Playground = () => {
     };
 
     fetchChains();
-  }, [t, API_BASE_URL, headers]);
+  }, [t, headers]);
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -56,9 +55,7 @@ const Playground = () => {
         setLoading(true);
         setError(null);
         const response = await fetch(
-          `${API_BASE_URL}/list_scraped_files?chain=${encodeURIComponent(
-            selectedChain
-          )}`,
+          `/api/list_scraped_files?chain=${encodeURIComponent(selectedChain)}`,
           { headers }
         );
         if (!response.ok) {
@@ -68,7 +65,7 @@ const Playground = () => {
         if (!Array.isArray(data.processed_files)) {
           throw new Error("Invalid data format received");
         }
-        setFiles(data.processed_files || []);
+        setFiles(data.processed_files.map((file) => file.file_name) || []);
         setSelectedFile("");
         setFileContent(null);
       } catch (err) {
@@ -81,7 +78,7 @@ const Playground = () => {
     };
 
     fetchFiles();
-  }, [selectedChain, t, API_BASE_URL, headers]);
+  }, [selectedChain, t, headers]);
 
   useEffect(() => {
     const fetchFileContent = async () => {
@@ -91,7 +88,7 @@ const Playground = () => {
         setLoading(true);
         setError(null);
         const response = await fetch(
-          `${API_BASE_URL}/raw/file_content?chain=${encodeURIComponent(
+          `/api/raw/file_content?chain=${encodeURIComponent(
             selectedChain
           )}&file=${encodeURIComponent(selectedFile)}`,
           { headers }
@@ -100,6 +97,7 @@ const Playground = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        console.log(data);
         if (!data.rows || !Array.isArray(data.rows)) {
           throw new Error("Invalid data format received");
         }
@@ -114,7 +112,7 @@ const Playground = () => {
     };
 
     fetchFileContent();
-  }, [selectedFile, selectedChain, t, API_BASE_URL, headers]);
+  }, [selectedFile, selectedChain, t, headers]);
 
   return (
     <div className="p-4">
