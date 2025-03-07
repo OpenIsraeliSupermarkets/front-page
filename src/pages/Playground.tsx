@@ -10,6 +10,11 @@ const Playground = () => {
   const [files, setFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState("");
   const [fileContent, setFileContent] = useState(null);
+  const [sortConfig, setSortConfig] = useState({
+    key: "",
+    direction: "ascending",
+  });
+  const [filterText, setFilterText] = useState("");
 
   const headers = useMemo(
     () => ({
@@ -18,6 +23,39 @@ const Playground = () => {
     }),
     []
   );
+
+  const sortedAndFilteredData = useMemo(() => {
+    if (!fileContent?.rows) return [];
+
+    const filteredData = fileContent.rows.filter((row) =>
+      Object.values(row.row_content).some((value) =>
+        String(value).toLowerCase().includes(filterText.toLowerCase())
+      )
+    );
+
+    if (sortConfig.key) {
+      filteredData.sort((a, b) => {
+        if (a.row_content[sortConfig.key] < b.row_content[sortConfig.key]) {
+          return sortConfig.direction === "ascending" ? -1 : 1;
+        }
+        if (a.row_content[sortConfig.key] > b.row_content[sortConfig.key]) {
+          return sortConfig.direction === "ascending" ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return filteredData;
+  }, [fileContent, sortConfig, filterText]);
+
+  const requestSort = (key: string) => {
+    setSortConfig((current) => ({
+      key,
+      direction:
+        current.key === key && current.direction === "ascending"
+          ? "descending"
+          : "ascending",
+    }));
+  };
 
   useEffect(() => {
     const fetchChains = async () => {
@@ -156,8 +194,48 @@ const Playground = () => {
       {fileContent && (
         <div>
           <h2 className="text-xl mb-2">{t("fileContent")}</h2>
-          <div className="border p-4 rounded bg-gray-50">
-            <pre>{JSON.stringify(fileContent, null, 2)}</pre>
+          <input
+            type="text"
+            placeholder={t("filterTable")}
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+            className="border p-2 rounded mb-4 w-full"
+          />
+          <div className="overflow-x-auto">
+            <table className="min-w-full border-collapse border">
+              <thead>
+                <tr>
+                  {fileContent.rows[0] &&
+                    Object.keys(fileContent.rows[0].row_content).map(
+                      (header) => (
+                        <th
+                          key={header}
+                          onClick={() => requestSort(header)}
+                          className="border p-2 bg-gray-100 cursor-pointer hover:bg-gray-200"
+                        >
+                          {header}
+                          {sortConfig.key === header && (
+                            <span className="ml-2">
+                              {sortConfig.direction === "ascending" ? "↑" : "↓"}
+                            </span>
+                          )}
+                        </th>
+                      )
+                    )}
+                </tr>
+              </thead>
+              <tbody>
+                {sortedAndFilteredData.map((row) => (
+                  <tr key={row.row_index}>
+                    {Object.values(row.row_content).map((cell, cellIndex) => (
+                      <td key={cellIndex} className="border p-2">
+                        {String(cell)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
