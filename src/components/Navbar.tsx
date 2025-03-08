@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { supabase } from "@/lib/supabase";
 import { AuthDialog } from "@/components/AuthDialog";
 import { Github, Linkedin, Mail } from "lucide-react";
+import { siDiscord } from "simple-icons/icons";
 
 const Navbar = () => {
   const location = useLocation();
@@ -290,6 +291,21 @@ const Navbar = () => {
               className="text-gray-500 hover:text-blue-600"
             >
               <Linkedin className="w-6 h-6" />
+            </a>
+            <a
+              href="https://discord.gg/qQx5nXxgKs"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:text-blue-600"
+            >
+              <svg
+                role="img"
+                viewBox="0 0 24 24"
+                className="w-6 h-6 fill-current"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d={siDiscord.path} />
+              </svg>
             </a>
           </div>
           <div className="mt-4">
