@@ -179,7 +179,7 @@ const Navbar = () => {
                 : "text-gray-500 border-transparent hover:text-blue-600 hover:bg-blue-50 hover:border-blue-600"
             }`}
           >
-            {t("Playground")}
+            {t("playground")}
           </Link>
         </div>
 

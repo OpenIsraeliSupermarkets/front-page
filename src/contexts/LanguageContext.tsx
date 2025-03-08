@@ -265,7 +265,7 @@ const translations = {
       // Navigation
       home: "דף הבית",
       documentation: "דוקומנטציה",
-      apiTokens: "מפתחות API",
+      apiTokens: "מפתחות גישה",
       loginRegister: "התחברות / הרשמה",
       logout: "התנתקות",
       socialLinks: "קישורים חברתיים",
