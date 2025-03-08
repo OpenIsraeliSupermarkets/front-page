@@ -151,101 +151,14 @@ const Playground = () => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-100" dir={direction}>
-      {/* Sidebar */}
-      <div
-        className={`w-64 min-w-[16rem] bg-white border-${
-          direction === "rtl" ? "l" : "r"
-        } border-gray-200 flex flex-col`}
-      >
-        <div className="pt-16 px-4 border-b border-gray-200">
-          <div className="flex justify-start items-center mb-4">
-            <h1 className="text-xl font-bold text-blue-600">
-              {t("playground")}
-            </h1>
-          </div>
-        </div>
-
-        <div className="p-4 flex-1 overflow-y-auto space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t("selectChain")}
-            </label>
-            <div className="relative">
-              <select
-                value={selectedChain || ""}
-                onChange={(e) => setSelectedChain(e.target.value)}
-                className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm appearance-none"
-              >
-                <option value="">{t("chooseChain")}</option>
-                {chains.map((chain) => (
-                  <option key={chain} value={chain}>
-                    {chain}
-                  </option>
-                ))}
-              </select>
-              <div
-                className={`pointer-events-none absolute inset-y-0 ${
-                  direction === "rtl" ? "left-0" : "right-0"
-                } flex items-center px-2 text-gray-700`}
-              >
-                <svg
-                  className="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          {selectedChain && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t("selectFile")}
-              </label>
-              <div className="relative">
-                <select
-                  value={selectedFile}
-                  onChange={(e) => setSelectedFile(e.target.value)}
-                  className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm appearance-none"
-                >
-                  <option value="">{t("chooseFile")}</option>
-                  {files.map((file) => (
-                    <option key={file} value={file}>
-                      {file}
-                    </option>
-                  ))}
-                </select>
-                <div
-                  className={`pointer-events-none absolute inset-y-0 ${
-                    direction === "rtl" ? "left-0" : "right-0"
-                  } flex items-center px-2 text-gray-700`}
-                >
-                  <svg
-                    className="fill-current h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
         <div className="bg-white border-b border-gray-200">
-          <div className="px-6 py-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900 truncate max-w-2xl">
-              {selectedFile || t("selectFileToView")}
-            </h2>
+          <div className="px-6 py-4">
+            {/* Loading Indicator */}
             {loading && (
-              <div className="flex items-center text-blue-600 shrink-0">
+              <div className="flex items-center text-blue-600 shrink-0 mb-4">
                 <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
                   <circle
                     className="opacity-25"
@@ -265,6 +178,82 @@ const Playground = () => {
                 {t("loading")}
               </div>
             )}
+
+            {/* Selection Controls - Added more top margin */}
+            <div className="flex gap-4 mt-16 mb-4">
+              <div className="w-64">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t("selectChain")}
+                </label>
+                <div className="relative">
+                  <select
+                    value={selectedChain || ""}
+                    onChange={(e) => setSelectedChain(e.target.value)}
+                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm appearance-none"
+                  >
+                    <option value="">{t("chooseChain")}</option>
+                    {chains.map((chain) => (
+                      <option key={chain} value={chain}>
+                        {chain}
+                      </option>
+                    ))}
+                  </select>
+                  <div
+                    className={`pointer-events-none absolute inset-y-0 ${
+                      direction === "rtl" ? "left-0" : "right-0"
+                    } flex items-center px-2 text-gray-700`}
+                  >
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {selectedChain && (
+                <div className="w-64">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {t("selectFile")}
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={selectedFile}
+                      onChange={(e) => setSelectedFile(e.target.value)}
+                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm appearance-none"
+                    >
+                      <option value="">{t("chooseFile")}</option>
+                      {files.map((file) => (
+                        <option key={file} value={file}>
+                          {file}
+                        </option>
+                      ))}
+                    </select>
+                    <div
+                      className={`pointer-events-none absolute inset-y-0 ${
+                        direction === "rtl" ? "left-0" : "right-0"
+                      } flex items-center px-2 text-gray-700`}
+                    >
+                      <svg
+                        className="fill-current h-4 w-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* File View Title - Added more spacing */}
+            <h2 className="text-lg font-semibold text-gray-900 truncate max-w-2xl mt-8">
+              {selectedFile || t("selectFileToView")}
+            </h2>
           </div>
         </div>
 
