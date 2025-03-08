@@ -202,13 +202,13 @@ const Navbar = () => {
                   onClick={() => scrollToSection("our-plans")}
                   className={`px-10 py-2 text-sm font-medium text-gray-500 hover:text-blue-600`}
                 >
-                  {t("ourPlans")}
+                  {t("plansTitle")}
                 </button>
                 <button
                   onClick={() => scrollToSection("faq")}
                   className={`px-10 py-2 text-sm font-medium text-gray-500 hover:text-blue-600`}
                 >
-                  {t("faq")}
+                  {t("faqTitle")}
                 </button>
               </>
             )}

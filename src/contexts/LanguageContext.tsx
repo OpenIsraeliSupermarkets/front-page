@@ -67,6 +67,7 @@ const translations = {
       // Plans Section
       plansTitle: "Our Plans",
       plansDescription: "Choose the plan that best fits your needs",
+      ourPlans: "Our Plans",
       rawApiPlan: "Raw API Access",
       rawApiDescription: "Direct access to our raw supermarket data API",
       rawApiFeature1: "Unlimited access to raw supermarket data",
@@ -297,8 +298,9 @@ const translations = {
       communityDesc: "הצטרפו לקהילה צומחת של מפתחים וחוקרים.",
 
       // Plans Section
-      plansTitle: "התוכניות שלנו",
-      plansDescription: "בחרו את התוכנית המתאימה לצרכים שלכם",
+      plansTitle: "החבילות שלנו",
+      plansDescription: "בחרו את החבילה המתאימה לצרכים שלכם",
+      ourPlans: "החבילות שלנו",
       rawApiPlan: "גישה ל-API גולמי",
       rawApiDescription: "גישה ישירה ל-API של נתוני הסופרמרקט הגולמיים",
       rawApiFeature1: "גישה בלתי מוגבלת לנתוני סופרמרקט גולמיים",
