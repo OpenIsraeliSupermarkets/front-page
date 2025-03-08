@@ -188,25 +188,33 @@ const Navbar = () => {
               <>
                 <button
                   onClick={() => scrollToSection("key-features")}
-                  className={`px-10 py-2 text-sm font-medium text-gray-500 hover:text-blue-600`}
+                  className={`px-6 py-2 text-sm font-medium text-gray-500 hover:text-blue-600 text-start w-full ${
+                    direction === "rtl" ? "mr-4" : "ml-4"
+                  }`}
                 >
                   {t("keyFeatures")}
                 </button>
                 <button
                   onClick={() => scrollToSection("who-we-support")}
-                  className={`px-10 py-2 text-sm font-medium text-gray-500 hover:text-blue-600`}
+                  className={`px-6 py-2 text-sm font-medium text-gray-500 hover:text-blue-600 text-start w-full ${
+                    direction === "rtl" ? "mr-4" : "ml-4"
+                  }`}
                 >
                   {t("whoWeSupport")}
                 </button>
                 <button
                   onClick={() => scrollToSection("our-plans")}
-                  className={`px-10 py-2 text-sm font-medium text-gray-500 hover:text-blue-600`}
+                  className={`px-6 py-2 text-sm font-medium text-gray-500 hover:text-blue-600 text-start w-full ${
+                    direction === "rtl" ? "mr-4" : "ml-4"
+                  }`}
                 >
                   {t("plansTitle")}
                 </button>
                 <button
                   onClick={() => scrollToSection("faq")}
-                  className={`px-10 py-2 text-sm font-medium text-gray-500 hover:text-blue-600`}
+                  className={`px-6 py-2 text-sm font-medium text-gray-500 hover:text-blue-600 text-start w-full ${
+                    direction === "rtl" ? "mr-4" : "ml-4"
+                  }`}
                 >
                   {t("faqTitle")}
                 </button>
