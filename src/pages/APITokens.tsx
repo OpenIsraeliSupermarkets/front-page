@@ -107,12 +107,21 @@ const APITokens = () => {
     });
   };
 
-  const handleDeactivateToken = async (tokenId: string) => {
+  const handleDeactivateToken = async (tokenId: string, tokenName: string) => {
     if (!user) {
       toast({
         variant: "destructive",
         title: t("errorTitle"),
         description: t("errorMustLogin"),
+      });
+      return;
+    }
+
+    if (tokenName === "Playground") {
+      toast({
+        variant: "destructive",
+        title: t("errorTitle"),
+        description: t("cannotDeactivatePlayground"),
       });
       return;
     }
@@ -230,10 +239,12 @@ const APITokens = () => {
                           )}
                         </p>
                       </div>
-                      {token.is_active && (
+                      {token.is_active && token.name !== "Playground" && (
                         <Button
                           variant="destructive"
-                          onClick={() => handleDeactivateToken(token.id)}
+                          onClick={() =>
+                            handleDeactivateToken(token.id, token.name)
+                          }
                         >
                           {t("deactivate")}
                         </Button>
