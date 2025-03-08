@@ -4,12 +4,15 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useUser } from "@/contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { AuthDialog } from "@/components/AuthDialog";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/components/ui/use-toast";
 
 const Playground = () => {
   const { t } = useTranslation();
   const { direction } = useLanguage();
   const { user } = useUser();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -18,6 +21,7 @@ const Playground = () => {
   const [files, setFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState("");
   const [fileContent, setFileContent] = useState(null);
+  const [apiToken, setApiToken] = useState<string | null>(null);
   const [sortConfig, setSortConfig] = useState({
     key: "",
     direction: "ascending",
@@ -26,9 +30,9 @@ const Playground = () => {
   const headers = useMemo(
     () => ({
       "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_NEXT_PUBLIC_API_TOKEN}`,
+      Authorization: `Bearer ${apiToken}`,
     }),
-    []
+    [apiToken]
   );
 
   const sortedAndFilteredData = useMemo(() => {
@@ -59,6 +63,62 @@ const Playground = () => {
           : "ascending",
     }));
   };
+
+  useEffect(() => {
+    const setupApiToken = async () => {
+      if (!user) return;
+
+      try {
+        // Check if playground token exists
+        const { data: tokens, error: fetchError } = await supabase
+          .from("api_tokens")
+          .select("*")
+          .eq("name", "Playground")
+          .eq("user_id", user.id)
+          .eq("is_active", true)
+          .single();
+
+        if (fetchError && fetchError.code !== "PGRST116") {
+          // PGRST116 is "no rows returned"
+          throw fetchError;
+        }
+
+        if (tokens) {
+          setApiToken(tokens.token);
+          return;
+        }
+
+        // Create new playground token
+        const newToken = crypto.randomUUID();
+        const { error: insertError } = await supabase
+          .from("api_tokens")
+          .insert({
+            name: "Playground",
+            token: newToken,
+            user_id: user.id,
+          });
+
+        if (insertError) {
+          throw insertError;
+        }
+
+        setApiToken(newToken);
+        toast({
+          title: t("tokenCreated"),
+          description: t("tokenCreatedDesc"),
+        });
+      } catch (err) {
+        console.error("Error setting up API token:", err);
+        toast({
+          variant: "destructive",
+          title: t("errorTitle"),
+          description: t("errorCreateToken"),
+        });
+      }
+    };
+
+    setupApiToken();
+  }, [user, toast, t]);
 
   useEffect(() => {
     const fetchChains = async () => {
