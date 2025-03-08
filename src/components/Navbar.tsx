@@ -29,6 +29,48 @@ const Navbar = () => {
     setLanguage(language === "en" ? "he" : "en");
   };
 
+  const scrollToSection = (sectionId: string) => {
+    setIsOpen(false);
+
+    // If we're not on the home page, first navigate to it
+    if (location.pathname !== "/") {
+      navigate("/");
+      // Wait for navigation to complete before scrolling
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const offset = 80; // Adjust this value based on your header height
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - offset;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        }
+      }, 100);
+    } else {
+      // If we're already on the home page, just scroll
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const offset = 80; // Adjust this value based on your header height
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }
+    }
+  };
+
+  const scrollToTop = () => {
+    setIsOpen(false);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <>
       <AuthDialog
@@ -123,7 +165,15 @@ const Navbar = () => {
           <div className="flex flex-col">
             <Link
               to="/"
-              onClick={() => setIsOpen(false)}
+              onClick={(e) => {
+                e.preventDefault();
+                if (location.pathname === "/") {
+                  scrollToTop();
+                } else {
+                  navigate("/");
+                }
+                setIsOpen(false);
+              }}
               className={`px-6 py-3 text-sm font-medium border-${
                 direction === "rtl" ? "l" : "r"
               }-4 ${
@@ -134,6 +184,34 @@ const Navbar = () => {
             >
               {t("home")}
             </Link>
+            {location.pathname === "/" && (
+              <>
+                <button
+                  onClick={() => scrollToSection("key-features")}
+                  className={`px-10 py-2 text-sm font-medium text-gray-500 hover:text-blue-600`}
+                >
+                  {t("keyFeatures")}
+                </button>
+                <button
+                  onClick={() => scrollToSection("who-we-support")}
+                  className={`px-10 py-2 text-sm font-medium text-gray-500 hover:text-blue-600`}
+                >
+                  {t("whoWeSupport")}
+                </button>
+                <button
+                  onClick={() => scrollToSection("our-plans")}
+                  className={`px-10 py-2 text-sm font-medium text-gray-500 hover:text-blue-600`}
+                >
+                  {t("ourPlans")}
+                </button>
+                <button
+                  onClick={() => scrollToSection("faq")}
+                  className={`px-10 py-2 text-sm font-medium text-gray-500 hover:text-blue-600`}
+                >
+                  {t("faq")}
+                </button>
+              </>
+            )}
             <Link
               to="/documentation"
               onClick={() => setIsOpen(false)}

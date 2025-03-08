@@ -63,7 +63,7 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-secondary/50">
+      <section className="py-24 bg-secondary/50" id="key-features">
         <div className="container px-4 mx-auto">
           <div className="text-center mb-16 animate-fade-up">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -99,7 +99,7 @@ const Index = () => {
       </section>
 
       {/* Target Audiences */}
-      <section className="py-24">
+      <section className="py-24" id="who-we-support">
         <div className="container px-4 mx-auto">
           <div className="text-center mb-16 animate-fade-up">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -141,7 +141,7 @@ const Index = () => {
       </section>
 
       {/* Plans Section */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-white" id="our-plans">
         <div className="container px-4 mx-auto">
           <div className="text-center mb-16 animate-fade-up">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -239,7 +239,7 @@ const Index = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-24 bg-secondary/30">
+      <section className="py-24 bg-secondary/30" id="faq">
         <div className="container px-4 mx-auto">
           <div className="text-center mb-16 animate-fade-up">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
