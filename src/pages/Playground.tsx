@@ -155,32 +155,23 @@ const Playground = () => {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
         <div className="bg-white border-b border-gray-200">
-          <div className="px-6 py-4">
-            {/* Loading Indicator */}
-            {loading && (
-              <div className="flex items-center text-blue-600 shrink-0 mb-4">
-                <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                    fill="none"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
-                </svg>
-                {t("loading")}
+          <div className="px-10 py-7">
+            {/* Title next to burger - adjusted alignment */}
+            <div className="flex items-center mb-8">
+              <div className="w-8 flex items-center">
+                {" "}
+                {/* Added flex and items-center */}
+                {/* Burger icon is rendered by the sidebar component */}
               </div>
-            )}
+              <h1 className="text-2xl font-bold text-gray-900 leading-none">
+                {" "}
+                {/* Added leading-none */}
+                {t("playground")}
+              </h1>
+            </div>
 
-            {/* Selection Controls - Added more top margin */}
-            <div className="flex gap-4 mt-16 mb-4">
+            {/* Selection Controls */}
+            <div className="flex gap-4">
               <div className="w-64">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   {t("selectChain")}
@@ -250,7 +241,30 @@ const Playground = () => {
               )}
             </div>
 
-            {/* File View Title - Added more spacing */}
+            {/* Loading Indicator */}
+            {loading && (
+              <div className="flex items-center text-blue-600 shrink-0 mt-4">
+                <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+                {t("loading")}
+              </div>
+            )}
+
+            {/* File View Title */}
             <h2 className="text-lg font-semibold text-gray-900 truncate max-w-2xl mt-8">
               {selectedFile || t("selectFileToView")}
             </h2>

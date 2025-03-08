@@ -252,8 +252,8 @@ const translations = {
   },
   he: {
     translation: {
-      playground: "שדה משחקים",
-      apiPlayground: "שדה משחקים API",
+      playground: "מגרש משחקים",
+      apiPlayground: "מגרש משחקים API",
       selectChain: "בחר רשת",
       selectChainPlaceholder: "בחר רשת מהרשימה",
       selectFile: "בחר קובץ",
