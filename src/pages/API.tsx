@@ -10,7 +10,7 @@ const API = () => {
     const handleApiRequest = async () => {
       try {
         // Get the path after /api
-        const path = location.pathname.replace("/api", "");
+        const path = location.pathname.replace(/^\/api/, "");
 
         // Construct the target URL
         const targetUrl = new URL(
