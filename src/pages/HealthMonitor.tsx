@@ -8,19 +8,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
   Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import { format, subDays } from "date-fns";
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { format, subDays, isWithinInterval } from "date-fns";
 import { he } from "date-fns/locale";
 import { supabase } from "@/lib/supabase";
 import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface HealthCheck {
   id: number;
@@ -35,18 +32,52 @@ interface HealthCheck {
   created_at: string;
 }
 
+interface EndpointStatus {
+  name: string;
+  status: "operational" | "degraded" | "down";
+  uptime: number;
+  responseTime: number;
+  lastCheck: Date;
+}
+
+interface UptimeInterval {
+  startTime: Date;
+  endTime: Date;
+  isHealthy: boolean;
+}
+
 const HealthMonitor = () => {
   const [healthData, setHealthData] = useState<HealthCheck[]>([]);
-  const [endpoints, setEndpoints] = useState<string[]>([]);
-  const [selectedEndpoint, setSelectedEndpoint] = useState<string>("");
-  const [loading, setLoading] = useState(true);
+  const [endpointStatuses, setEndpointStatuses] = useState<EndpointStatus[]>(
+    []
+  );
   const [timeRange, setTimeRange] = useState<"24h" | "7d" | "30d">("24h");
+  const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
+  const { language } = useLanguage();
+
+  const translations: Record<string, { he: string; en: string }> = {
+    "https://www.openisraelisupermarkets.co.il/api/long_term_health": {
+      he: "אחסון נתונים היסטורי",
+      en: "Long Term Historical Data Storage",
+    },
+    "https://www.openisraelisupermarkets.co.il/api/short_term_health": {
+      he: "עיבוד נתונים",
+      en: "Data Processing",
+    },
+    "https://www.openisraelisupermarkets.co.il/api/service_health": {
+      he: "פונקציונליות ה-API",
+      en: "API Functionality",
+    },
+    "https://www.openisraelisupermarkets.co.il": {
+      he: "דף הבית",
+      en: "Home Page",
+    },
+  };
 
   useEffect(() => {
     const fetchHealthData = async () => {
       try {
-        // חישוב תאריך התחלה בהתאם לטווח הזמן שנבחר
         const startDate = new Date();
         switch (timeRange) {
           case "7d":
@@ -69,14 +100,51 @@ const HealthMonitor = () => {
 
         setHealthData(data);
 
-        // חילוץ נקודות קצה ייחודיות
-        const uniqueEndpoints = [
-          ...new Set(data.map((check) => check.endpoint)),
-        ];
-        setEndpoints(uniqueEndpoints);
-        if (uniqueEndpoints.length > 0) {
-          setSelectedEndpoint(uniqueEndpoints[0]);
-        }
+        // חישוב סטטוס לכל נקודת קצה
+        const endpoints = [...new Set(data.map((check) => check.endpoint))];
+        const statuses = endpoints.map((endpoint) => {
+          const endpointChecks = data.filter(
+            (check) => check.endpoint === endpoint
+          );
+          const recentChecks = endpointChecks.slice(-5);
+          const lastCheck = new Date(
+            endpointChecks[endpointChecks.length - 1]?.timestamp || new Date()
+          );
+
+          // חישוב זמן תגובה ממוצע
+          const avgResponseTime = Math.round(
+            recentChecks.reduce((acc, check) => acc + check.response_time, 0) /
+              recentChecks.length
+          );
+
+          // חישוב אחוז זמינות
+          const uptime = Math.round(
+            (endpointChecks.filter((check) => check.is_healthy).length /
+              endpointChecks.length) *
+              100
+          );
+
+          // קביעת סטטוס
+          let status: "operational" | "degraded" | "down" = "operational";
+          const recentFailures = recentChecks.filter(
+            (check) => !check.is_healthy
+          ).length;
+          if (recentFailures === recentChecks.length) {
+            status = "down";
+          } else if (recentFailures > 0) {
+            status = "degraded";
+          }
+
+          return {
+            name: endpoint,
+            status,
+            uptime,
+            responseTime: avgResponseTime,
+            lastCheck,
+          };
+        });
+
+        setEndpointStatuses(statuses);
       } catch (error) {
         console.error("שגיאה בטעינת נתוני בריאות:", error);
       } finally {
@@ -87,204 +155,180 @@ const HealthMonitor = () => {
     fetchHealthData();
   }, [timeRange]);
 
-  const filteredData = healthData
-    .filter((check) => check.endpoint === selectedEndpoint)
-    .map((check) => ({
-      ...check,
-      timestamp: format(new Date(check.timestamp), "dd/MM HH:mm", {
-        locale: he,
-      }),
-      status: check.is_healthy ? 100 : 0,
-    }));
-
-  const calculateUptime = () => {
-    const endpointData = healthData.filter(
-      (check) => check.endpoint === selectedEndpoint
-    );
-    if (endpointData.length === 0) return 0;
-    const healthyChecks = endpointData.filter(
-      (check) => check.is_healthy
-    ).length;
-    return Math.round((healthyChecks / endpointData.length) * 100);
+  const getStatusColor = (status: "operational" | "degraded" | "down") => {
+    switch (status) {
+      case "operational":
+        return "bg-green-500";
+      case "degraded":
+        return "bg-yellow-500";
+      case "down":
+        return "bg-red-500";
+      default:
+        return "bg-gray-500";
+    }
   };
 
-  const calculateAverageResponseTime = () => {
+  const getUptimeGraph = (endpoint: string) => {
     const endpointData = healthData.filter(
-      (check) => check.endpoint === selectedEndpoint
+      (check) => check.endpoint === endpoint
     );
-    if (endpointData.length === 0) return 0;
-    return Math.round(
-      endpointData.reduce((acc, curr) => acc + curr.response_time, 0) /
-        endpointData.length
+    const totalIntervals = 90; // מספר האינטרבלים בגרף
+    const intervalSize = Math.ceil(endpointData.length / totalIntervals);
+
+    const intervals: UptimeInterval[] = Array.from(
+      { length: totalIntervals },
+      (_, i) => {
+        const intervalChecks = endpointData.slice(
+          i * intervalSize,
+          (i + 1) * intervalSize
+        );
+        if (intervalChecks.length === 0) {
+          return {
+            startTime: new Date(),
+            endTime: new Date(),
+            isHealthy: true,
+          };
+        }
+
+        return {
+          startTime: new Date(intervalChecks[0].timestamp),
+          endTime: new Date(
+            intervalChecks[intervalChecks.length - 1].timestamp
+          ),
+          isHealthy: intervalChecks.every((check) => check.is_healthy),
+        };
+      }
     );
+
+    return (
+      <div className="flex gap-1 h-8 overflow-hidden rounded">
+        {intervals.map((interval, i) => (
+          <TooltipProvider key={i}>
+            <Tooltip>
+              <TooltipTrigger>
+                <div
+                  className={`h-8 w-1 ${
+                    interval.isHealthy ? "bg-green-500" : "bg-red-500"
+                  }`}
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>
+                  {format(interval.startTime, "dd/MM HH:mm", {
+                    locale: language === "he" ? he : undefined,
+                  })}{" "}
+                  -{" "}
+                  {format(interval.endTime, "dd/MM HH:mm", {
+                    locale: language === "he" ? he : undefined,
+                  })}
+                </p>
+                <p>{interval.isHealthy ? t("healthy") : t("unhealthy")}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ))}
+      </div>
+    );
+  };
+
+  const getEndpointDisplayName = (endpoint: string) => {
+    const translation = translations[endpoint];
+    if (!translation) return endpoint;
+    return language === "he" ? translation.he : translation.en;
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">טוען...</div>
+      <div className="flex justify-center items-center h-screen">
+        {t("loading")}
+      </div>
     );
   }
 
   return (
     <div className="container mx-auto p-4 space-y-4 rtl">
-      <h1 className="text-3xl font-bold mb-6">ניטור יציבות מערכת</h1>
+      <h1 className="text-3xl font-bold mb-6">{t("healthMonitorTitle")}</h1>
 
-      <div className="flex flex-wrap gap-4 mb-6">
-        <Card className="flex-1 min-w-[250px]">
-          <CardHeader>
-            <CardTitle>בחר נקודת קצה</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Select
-              value={selectedEndpoint}
-              onValueChange={setSelectedEndpoint}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="בחר נקודת קצה" />
-              </SelectTrigger>
-              <SelectContent>
-                {endpoints.map((endpoint) => (
-                  <SelectItem key={endpoint} value={endpoint}>
-                    {endpoint}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </CardContent>
-        </Card>
-
-        <Card className="flex-1 min-w-[250px]">
-          <CardHeader>
-            <CardTitle>טווח זמן</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Select
-              value={timeRange}
-              onValueChange={(value: "24h" | "7d" | "30d") =>
-                setTimeRange(value)
-              }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="24h">24 שעות אחרונות</SelectItem>
-                <SelectItem value="7d">7 ימים אחרונים</SelectItem>
-                <SelectItem value="30d">30 ימים אחרונים</SelectItem>
-              </SelectContent>
-            </Select>
-          </CardContent>
-        </Card>
+      <div className="mb-6">
+        <Select
+          value={timeRange}
+          onValueChange={(value: "24h" | "7d" | "30d") => setTimeRange(value)}
+        >
+          <SelectTrigger className="w-[200px] bg-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-white">
+            <SelectItem value="24h" className="hover:bg-gray-100">
+              {t("last24Hours")}
+            </SelectItem>
+            <SelectItem value="7d" className="hover:bg-gray-100">
+              {t("last7Days")}
+            </SelectItem>
+            <SelectItem value="30d" className="hover:bg-gray-100">
+              {t("last30Days")}
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card className="bg-gradient-to-br from-green-50 to-green-100">
-          <CardHeader>
-            <CardTitle>זמינות</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold text-green-700">
-              {calculateUptime()}%
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100">
-          <CardHeader>
-            <CardTitle>זמן תגובה ממוצע</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold text-blue-700">
-              {calculateAverageResponseTime()} ms
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-purple-50 to-purple-100">
-          <CardHeader>
-            <CardTitle>בדיקות</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold text-purple-700">
-              {filteredData.length}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>גרף ביצועים</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[400px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={filteredData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="timestamp" />
-                <YAxis yAxisId="left" />
-                <YAxis yAxisId="right" orientation="right" />
-                <Tooltip />
-                <Legend />
-                <Line
-                  yAxisId="left"
-                  type="monotone"
-                  dataKey="status"
-                  stroke="#4CAF50"
-                  name="סטטוס"
-                  dot={false}
-                />
-                <Line
-                  yAxisId="right"
-                  type="monotone"
-                  dataKey="response_time"
-                  stroke="#2196F3"
-                  name="זמן תגובה (ms)"
-                  dot={false}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
-
-      {selectedEndpoint && (
-        <Card>
-          <CardHeader>
-            <CardTitle>שגיאות אחרונות</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {healthData
-                .filter(
-                  (check) =>
-                    check.endpoint === selectedEndpoint && !check.is_healthy
-                )
-                .slice(-5)
-                .reverse()
-                .map((error) => (
-                  <div key={error.id} className="p-4 bg-red-50 rounded-lg">
-                    <div className="font-semibold text-red-700">
-                      {format(
-                        new Date(error.timestamp),
-                        "dd/MM/yyyy HH:mm:ss",
-                        { locale: he }
-                      )}
+      <div className="space-y-4">
+        {endpointStatuses.map((endpointStatus) => (
+          <Card key={endpointStatus.name}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <CardTitle className="text-lg">
+                    {getEndpointDisplayName(endpointStatus.name)}
+                  </CardTitle>
+                  <span
+                    className={`px-3 py-1 rounded-full text-white text-sm ${getStatusColor(
+                      endpointStatus.status
+                    )}`}
+                  >
+                    {t(endpointStatus.status)}
+                  </span>
+                </div>
+                <div className="text-sm text-gray-500">
+                  {format(endpointStatus.lastCheck, "dd/MM/yyyy HH:mm", {
+                    locale: language === "he" ? he : undefined,
+                  })}
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {getUptimeGraph(endpointStatus.name)}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <div className="text-sm text-gray-500">
+                      {t("availability")}
                     </div>
-                    <div className="text-red-600">
-                      קוד שגיאה: {error.status_code}
+                    <div className="text-2xl font-bold">
+                      {endpointStatus.uptime}%
                     </div>
-                    {error.error_message && (
-                      <div className="text-sm text-red-500 mt-1">
-                        {error.error_message}
-                      </div>
-                    )}
                   </div>
-                ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <div className="text-sm text-gray-500">
+                      {t("averageResponseTime")}
+                    </div>
+                    <div className="text-2xl font-bold">
+                      {endpointStatus.responseTime} {t("milliseconds")}
+                    </div>
+                  </div>
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <div className="text-sm text-gray-500">
+                      {t("currentStatus")}
+                    </div>
+                    <div className="text-2xl font-bold">
+                      {t(endpointStatus.status)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };

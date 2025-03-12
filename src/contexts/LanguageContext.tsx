@@ -250,6 +250,31 @@ const translations = {
       chooseChain: "Choose Chain",
       selectFileToView: "Select File to View",
       chooseFile: "Choose File",
+
+      // Health Monitor Page
+      healthMonitorTitle: "System Health Monitor",
+      timeRange: "Time Range",
+      last24Hours: "Last 24 Hours",
+      last7Days: "Last 7 Days",
+      last30Days: "Last 30 Days",
+      availability: "Availability",
+      averageResponseTime: "Average Response Time",
+      currentStatus: "Current Status",
+      operational: "Operational",
+      degraded: "Degraded Performance",
+      down: "Down",
+      healthy: "Healthy",
+      unhealthy: "Unhealthy",
+      milliseconds: "ms",
+
+      // Endpoint Names
+      "https://www.openisraelisupermarkets.co.il/api/long_term_health":
+        "Long Term Historical Data Storage",
+      "https://www.openisraelisupermarkets.co.il/api/short_term_health":
+        "Data Processing",
+      "https://www.openisraelisupermarkets.co.il/api/service_health":
+        "API Functionality",
+      "https://www.openisraelisupermarkets.co.il": "Home Page",
     },
   },
   he: {
@@ -478,6 +503,31 @@ const translations = {
       chooseChain: "בחר רשת",
       selectFileToView: "בחר קובץ לצפייה",
       chooseFile: "בחר קובץ",
+
+      // Health Monitor Page
+      healthMonitorTitle: "ניטור יציבות מערכת",
+      timeRange: "טווח זמן",
+      last24Hours: "24 שעות אחרונות",
+      last7Days: "7 ימים אחרונים",
+      last30Days: "30 ימים אחרונים",
+      availability: "זמינות",
+      averageResponseTime: "זמן תגובה ממוצע",
+      currentStatus: "סטטוס נוכחי",
+      operational: "תקין",
+      degraded: "ביצועים ירודים",
+      down: "לא זמין",
+      healthy: "תקין",
+      unhealthy: "לא תקין",
+      milliseconds: "אלפיות שנייה",
+
+      // Endpoint Names
+      "https://www.openisraelisupermarkets.co.il/api/long_term_health":
+        "אחסון נתונים היסטורי ארוך טווח",
+      "https://www.openisraelisupermarkets.co.il/api/short_term_health":
+        "עיבוד נתונים",
+      "https://www.openisraelisupermarkets.co.il/api/service_health":
+        "פונקציונליות ה-API",
+      "https://www.openisraelisupermarkets.co.il": "דף הבית",
     },
   },
 };
