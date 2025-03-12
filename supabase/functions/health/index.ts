@@ -10,7 +10,7 @@ const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
 const ENDPOINTS = [
   `${API_URL}`,
   `${API_URL}/api/service_health`,
-  `${API_URL}/api/api_health`,
+  `${API_URL}/api/short_term_health`,
   `${API_URL}/api/long_term_health`,
 ];
 
@@ -40,19 +40,21 @@ serve(async () => {
       const startTime = Date.now();
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
-      
+
       const response = await fetch(endpoint, {
         signal: controller.signal,
         headers: {
-          'Accept': 'application/json',
-          'User-Agent': 'HealthCheck/1.0',
-          'Authorization': `Bearer ${TOKEN}`
-        }
+          Accept: "application/json",
+          "User-Agent": "HealthCheck/1.0",
+          Authorization: `Bearer ${TOKEN}`,
+        },
       });
-      
+
       clearTimeout(timeoutId);
       const responseTime = Date.now() - startTime;
-      console.log(`Response received in ${responseTime}ms with status ${response.status}`);
+      console.log(
+        `Response received in ${responseTime}ms with status ${response.status}`
+      );
       let responseData;
 
       try {
@@ -74,10 +76,10 @@ serve(async () => {
         is_healthy:
           response.ok &&
           (endpoint === `${API_URL}/`
-            ? true  // בדיקת זמינות בלבד עבור דף הבית
+            ? true // בדיקת זמינות בלבד עבור דף הבית
             : endpoint.endsWith("/service_health")
-              ? responseData?.status === "healthy"
-              : !responseData?.is_updated || responseData?.is_updated === true),
+            ? responseData?.status === "healthy"
+            : !responseData?.is_updated || responseData?.is_updated === true),
         response_time: responseTime,
         status_code: response.status,
         response_data: responseData,
@@ -91,14 +93,16 @@ serve(async () => {
       results.push(result);
     } catch (error) {
       console.error(`Failed to check ${endpoint}:`, error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
       results.push({
         endpoint,
         timestamp: new Date().toISOString(),
         is_healthy: false,
         response_time: -1,
-        status_code: error.name === 'AbortError' ? 408 : 500,
-        error_message: error.name === 'AbortError' ? 'Request timeout' : errorMessage,
+        status_code: error.name === "AbortError" ? 408 : 500,
+        error_message:
+          error.name === "AbortError" ? "Request timeout" : errorMessage,
       });
     }
   }
