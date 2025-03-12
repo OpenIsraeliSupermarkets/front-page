@@ -185,42 +185,39 @@ const Navbar = () => {
             >
               {t("home")}
             </Link>
-            {location.pathname === "/" && (
-              <>
-                <button
-                  onClick={() => scrollToSection("key-features")}
-                  className={`px-6 py-2 text-sm font-medium text-gray-500 hover:text-blue-600 text-start w-full ${
-                    direction === "rtl" ? "mr-4" : "ml-4"
-                  }`}
-                >
-                  {t("keyFeatures")}
-                </button>
-                <button
-                  onClick={() => scrollToSection("who-we-support")}
-                  className={`px-6 py-2 text-sm font-medium text-gray-500 hover:text-blue-600 text-start w-full ${
-                    direction === "rtl" ? "mr-4" : "ml-4"
-                  }`}
-                >
-                  {t("whoWeSupport")}
-                </button>
-                <button
-                  onClick={() => scrollToSection("our-plans")}
-                  className={`px-6 py-2 text-sm font-medium text-gray-500 hover:text-blue-600 text-start w-full ${
-                    direction === "rtl" ? "mr-4" : "ml-4"
-                  }`}
-                >
-                  {t("plansTitle")}
-                </button>
-                <button
-                  onClick={() => scrollToSection("faq")}
-                  className={`px-6 py-2 text-sm font-medium text-gray-500 hover:text-blue-600 text-start w-full ${
-                    direction === "rtl" ? "mr-4" : "ml-4"
-                  }`}
-                >
-                  {t("faqTitle")}
-                </button>
-              </>
-            )}
+            {/* תת תפריט של דף הבית - תמיד פתוח */}
+            <button
+              onClick={() => scrollToSection("key-features")}
+              className={`px-6 py-2 text-sm font-medium text-gray-500 hover:text-blue-600 text-start w-full ${
+                direction === "rtl" ? "mr-4" : "ml-4"
+              }`}
+            >
+              {t("keyFeatures")}
+            </button>
+            <button
+              onClick={() => scrollToSection("who-we-support")}
+              className={`px-6 py-2 text-sm font-medium text-gray-500 hover:text-blue-600 text-start w-full ${
+                direction === "rtl" ? "mr-4" : "ml-4"
+              }`}
+            >
+              {t("whoWeSupport")}
+            </button>
+            <button
+              onClick={() => scrollToSection("our-plans")}
+              className={`px-6 py-2 text-sm font-medium text-gray-500 hover:text-blue-600 text-start w-full ${
+                direction === "rtl" ? "mr-4" : "ml-4"
+              }`}
+            >
+              {t("plansTitle")}
+            </button>
+            <button
+              onClick={() => scrollToSection("faq")}
+              className={`px-6 py-2 text-sm font-medium text-gray-500 hover:text-blue-600 text-start w-full ${
+                direction === "rtl" ? "mr-4" : "ml-4"
+              }`}
+            >
+              {t("faqTitle")}
+            </button>
             <Link
               to="/documentation"
               onClick={() => setIsOpen(false)}
@@ -233,6 +230,19 @@ const Navbar = () => {
               }`}
             >
               {t("documentation")}
+            </Link>
+            <Link
+              to="/health"
+              onClick={() => setIsOpen(false)}
+              className={`px-6 py-3 text-sm font-medium border-${
+                direction === "rtl" ? "l" : "r"
+              }-4 ${
+                isActive("/health")
+                  ? "text-blue-600 border-blue-600 bg-blue-50"
+                  : "text-gray-500 border-transparent hover:text-blue-600 hover:bg-blue-50 hover:border-blue-600"
+              }`}
+            >
+              {t("systemHealth")}
             </Link>
           </div>
         </div>
