@@ -8,6 +8,16 @@ import { BackButton } from "@/components/BackButton";
 import { useUser } from "@/contexts/UserContext";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 
 interface APIToken {
   id: string;
@@ -17,22 +27,42 @@ interface APIToken {
   is_active: boolean;
 }
 
+// Define validation schema for token name
+const tokenFormSchema = z.object({
+  tokenName: z
+    .string()
+    .min(3, { message: "Token name must be at least 3 characters" })
+    .max(50, { message: "Token name must be at most 50 characters" })
+    .regex(/^[a-zA-Z0-9 _-]+$/, {
+      message:
+        "Token name can only contain letters, numbers, spaces, underscores and hyphens",
+    }),
+});
+
+type TokenFormValues = z.infer<typeof tokenFormSchema>;
+
 const APITokens = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user } = useUser();
   const { t } = useTranslation();
   const { direction } = useLanguage();
-  const [tokenName, setTokenName] = useState("");
   const [generatedToken, setGeneratedToken] = useState<string | null>(null);
   const [tokens, setTokens] = useState<APIToken[]>([]);
+
+  const form = useForm<TokenFormValues>({
+    resolver: zodResolver(tokenFormSchema),
+    defaultValues: {
+      tokenName: "",
+    },
+  });
 
   // Load tokens only if user is authenticated
   useEffect(() => {
     const loadTokens = async () => {
       if (!user) return;
 
-      const { data, error } = await supabase.functions.invoke('get-tokens');
+      const { data, error } = await supabase.functions.invoke("get-tokens");
 
       if (error) {
         toast({
@@ -49,7 +79,7 @@ const APITokens = () => {
     loadTokens();
   }, [user, toast, t]);
 
-  const handleCreateToken = async () => {
+  const handleCreateToken = async (values: TokenFormValues) => {
     if (!user) {
       toast({
         variant: "destructive",
@@ -59,17 +89,8 @@ const APITokens = () => {
       return;
     }
 
-    if (!tokenName.trim()) {
-      toast({
-        variant: "destructive",
-        title: t("errorTitle"),
-        description: t("errorEnterName"),
-      });
-      return;
-    }
-
-    const { data, error } = await supabase.functions.invoke('create-token', {
-      body: { name: tokenName }
+    const { data, error } = await supabase.functions.invoke("create-token", {
+      body: { name: values.tokenName.trim() },
     });
 
     if (error) {
@@ -82,10 +103,12 @@ const APITokens = () => {
     }
 
     setGeneratedToken(data.token);
-    setTokenName("");
+    form.reset();
 
     // Refresh tokens list
-    const { data: updatedTokens } = await supabase.functions.invoke('get-tokens');
+    const { data: updatedTokens } = await supabase.functions.invoke(
+      "get-tokens"
+    );
 
     if (updatedTokens) {
       setTokens(updatedTokens);
@@ -117,8 +140,8 @@ const APITokens = () => {
     }
 
     try {
-      const { error } = await supabase.functions.invoke('deactivate-token', {
-        body: JSON.stringify({ tokenId })
+      const { error } = await supabase.functions.invoke("deactivate-token", {
+        body: JSON.stringify({ tokenId }),
       });
 
       if (error) {
@@ -173,25 +196,36 @@ const APITokens = () => {
               <h2 className="text-xl font-semibold mb-4">
                 {t("createNewToken")}
               </h2>
-              <div className="space-y-4">
-                <div>
-                  <label
-                    htmlFor="tokenName"
-                    className="block text-sm font-medium mb-2"
-                  >
-                    {t("tokenName")}
-                  </label>
-                  <Input
-                    id="tokenName"
-                    placeholder={t("enterTokenName")}
-                    value={tokenName}
-                    onChange={(e) => setTokenName(e.target.value)}
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(handleCreateToken)}
+                  className="space-y-4"
+                >
+                  <FormField
+                    control={form.control}
+                    name="tokenName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <label
+                          htmlFor="tokenName"
+                          className="block text-sm font-medium mb-2"
+                        >
+                          {t("tokenName")}
+                        </label>
+                        <FormControl>
+                          <Input
+                            id="tokenName"
+                            placeholder={t("enterTokenName")}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
-                <Button onClick={handleCreateToken}>
-                  {t("generateToken")}
-                </Button>
-              </div>
+                  <Button type="submit">{t("generateToken")}</Button>
+                </form>
+              </Form>
             </div>
 
             {generatedToken && (

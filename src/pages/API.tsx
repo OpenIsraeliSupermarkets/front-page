@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackButton } from "@/components/BackButton";
+import { sanitizeHtml } from "@/lib/utils";
 
 const API = () => {
   const location = useLocation();
@@ -36,10 +37,13 @@ const API = () => {
 
         // Convert ArrayBuffer to text for display
         const decoder = new TextDecoder("utf-8");
-        pre.textContent = decoder.decode(responseBody);
+        // Sanitize the content before setting it to prevent XSS
+        const content = decoder.decode(responseBody);
+        pre.textContent = content; // textContent automatically escapes HTML
+
         document.body.appendChild(pre);
 
-        // Set content type and CORS headers
+        // Set content type and CORS headers - Using a safer approach
         const headers = {
           "Content-Type":
             response.headers.get("content-type") || "application/json",
@@ -49,16 +53,21 @@ const API = () => {
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         };
 
+        // Create meta tags safely instead of using innerHTML
         Object.entries(headers).forEach(([key, value]) => {
           if (value) {
-            document.getElementsByTagName("head")[0].innerHTML += `
-              <meta http-equiv="${key}" content="${value}">
-            `;
+            const meta = document.createElement("meta");
+            meta.setAttribute("http-equiv", key);
+            meta.setAttribute("content", value);
+            document.getElementsByTagName("head")[0].appendChild(meta);
           }
         });
       } catch (error) {
-        console.error("API forwarding error:", error);
-        navigate("/404");
+        console.error("API request failed:", error);
+        
+        const errorPre = document.createElement("pre");
+        errorPre.textContent = "API request failed. Please try again.";
+        document.body.appendChild(errorPre);
       }
     };
 
@@ -66,9 +75,8 @@ const API = () => {
   }, [location, navigate]);
 
   return (
-    <div>
+    <div className="container">
       <BackButton />
-      <div id="api-response" className="pt-16"></div>
     </div>
   );
 };

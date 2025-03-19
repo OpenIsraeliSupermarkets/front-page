@@ -13,9 +13,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { format, subDays, isWithinInterval } from "date-fns";
+import { format } from "date-fns";
 import { he } from "date-fns/locale";
-import { supabase } from "@/lib/supabase";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -33,17 +32,16 @@ interface HealthCheck {
 }
 
 interface EndpointStatus {
+  id: string;
   name: string;
   status: "operational" | "degraded" | "down";
   uptime: number;
   responseTime: number;
   lastCheck: Date;
-}
-
-interface UptimeInterval {
-  startTime: Date;
-  endTime: Date;
-  isHealthy: boolean;
+  translations: {
+    he: string;
+    en: string;
+  };
 }
 
 const HealthMonitor = () => {
@@ -56,97 +54,27 @@ const HealthMonitor = () => {
   const { t } = useTranslation();
   const { language } = useLanguage();
 
-  const translations: Record<string, { he: string; en: string }> = {
-    "https://www.openisraelisupermarkets.co.il/api/long_term_health": {
-      he: "אחסון נתונים היסטורי",
-      en: "Long Term Historical Data Storage",
-    },
-    "https://www.openisraelisupermarkets.co.il/api/short_term_health": {
-      he: "עיבוד נתונים",
-      en: "Data Processing",
-    },
-    "https://www.openisraelisupermarkets.co.il/api/service_health": {
-      he: "פונקציונליות ה-API",
-      en: "API Functionality",
-    },
-    "https://www.openisraelisupermarkets.co.il": {
-      he: "דף הבית",
-      en: "Home Page",
-    },
-  };
-
   useEffect(() => {
     const fetchHealthData = async () => {
       try {
-        const startDate = new Date();
-        switch (timeRange) {
-          case "7d":
-            startDate.setDate(startDate.getDate() - 7);
-            break;
-          case "30d":
-            startDate.setDate(startDate.getDate() - 30);
-            break;
-          default: // 24h
-            startDate.setDate(startDate.getDate() - 1);
-        }
-
-        const { data, error } = await supabase
-          .from("health_checks")
-          .select("*")
-          .gte("timestamp", startDate.toISOString())
-          .order("timestamp", { ascending: true });
-
-        if (error) throw error;
-
-        setHealthData(data);
-
-        // חישוב סטטוס לכל נקודת קצה
-        const endpoints = [...new Set(data.map((check) => check.endpoint))];
-        const statuses = endpoints.map((endpoint) => {
-          const endpointChecks = data.filter(
-            (check) => check.endpoint === endpoint
-          );
-          const recentChecks = endpointChecks.slice(-5);
-          const lastCheck = new Date(
-            endpointChecks[endpointChecks.length - 1]?.timestamp || new Date()
-          );
-
-          // חישוב זמן תגובה ממוצע
-          const avgResponseTime = Math.round(
-            recentChecks.reduce((acc, check) => acc + check.response_time, 0) /
-              recentChecks.length
-          );
-
-          // חישוב אחוז זמינות
-          const uptime = Math.round(
-            (endpointChecks.filter((check) => check.is_healthy).length /
-              endpointChecks.length) *
-              100
-          );
-
-          // קביעת סטטוס
-          let status: "operational" | "degraded" | "down" = "operational";
-          const recentFailures = recentChecks.filter(
-            (check) => !check.is_healthy
-          ).length;
-          if (recentFailures === recentChecks.length) {
-            status = "down";
-          } else if (recentFailures > 0) {
-            status = "degraded";
+        const response = await fetch(
+          `${
+            import.meta.env.VITE_SUPABASE_URL
+          }/functions/v1/get-health-status?timeRange=${timeRange}`,
+          {
+            headers: {
+              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            },
           }
+        );
 
-          return {
-            name: endpoint,
-            status,
-            uptime,
-            responseTime: avgResponseTime,
-            lastCheck,
-          };
-        });
+        if (!response.ok) throw new Error("Failed to fetch health data");
 
+        const { statuses, healthData } = await response.json();
+        setHealthData(healthData);
         setEndpointStatuses(statuses);
       } catch (error) {
-        console.error("שגיאה בטעינת נתוני בריאות:", error);
+        console.error("Error fetching health data:", error);
       } finally {
         setLoading(false);
       }
@@ -175,30 +103,25 @@ const HealthMonitor = () => {
     const totalIntervals = 90; // מספר האינטרבלים בגרף
     const intervalSize = Math.ceil(endpointData.length / totalIntervals);
 
-    const intervals: UptimeInterval[] = Array.from(
-      { length: totalIntervals },
-      (_, i) => {
-        const intervalChecks = endpointData.slice(
-          i * intervalSize,
-          (i + 1) * intervalSize
-        );
-        if (intervalChecks.length === 0) {
-          return {
-            startTime: new Date(),
-            endTime: new Date(),
-            isHealthy: true,
-          };
-        }
-
+    const intervals = Array.from({ length: totalIntervals }, (_, i) => {
+      const intervalChecks = endpointData.slice(
+        i * intervalSize,
+        (i + 1) * intervalSize
+      );
+      if (intervalChecks.length === 0) {
         return {
-          startTime: new Date(intervalChecks[0].timestamp),
-          endTime: new Date(
-            intervalChecks[intervalChecks.length - 1].timestamp
-          ),
-          isHealthy: intervalChecks.every((check) => check.is_healthy),
+          startTime: new Date(),
+          endTime: new Date(),
+          isHealthy: true,
         };
       }
-    );
+
+      return {
+        startTime: new Date(intervalChecks[0].timestamp),
+        endTime: new Date(intervalChecks[intervalChecks.length - 1].timestamp),
+        isHealthy: intervalChecks.every((check) => check.is_healthy),
+      };
+    });
 
     return (
       <div className="flex gap-1 h-8 overflow-hidden rounded">
@@ -231,10 +154,10 @@ const HealthMonitor = () => {
     );
   };
 
-  const getEndpointDisplayName = (endpoint: string) => {
-    const translation = translations[endpoint];
-    if (!translation) return endpoint;
-    return language === "he" ? translation.he : translation.en;
+  const getEndpointDisplayName = (endpointStatus: EndpointStatus) => {
+    return language === "he"
+      ? endpointStatus.translations.he
+      : endpointStatus.translations.en;
   };
 
   if (loading) {
@@ -273,12 +196,12 @@ const HealthMonitor = () => {
 
       <div className="space-y-4">
         {endpointStatuses.map((endpointStatus) => (
-          <Card key={endpointStatus.name}>
+          <Card key={endpointStatus.id}>
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <CardTitle className="text-lg">
-                    {getEndpointDisplayName(endpointStatus.name)}
+                    {getEndpointDisplayName(endpointStatus)}
                   </CardTitle>
                   <span
                     className={`px-3 py-1 rounded-full text-white text-sm ${getStatusColor(
