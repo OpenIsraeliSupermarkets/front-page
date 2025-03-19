@@ -41,7 +41,7 @@ jobs:
 
       - name: Adding env variables
         run: |
-          echo "SUPABASE_URL=${{ secrets.VITE_SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
+          echo "VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
           echo "SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}" >> $GITHUB_ENV
 
       - name: Deploy to Runner
