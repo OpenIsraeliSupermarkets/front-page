@@ -2,11 +2,19 @@ import express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cors from 'cors';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+// Enable CORS for all routes
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['authorization', 'x-client-info', 'apikey', 'content-type']
+}));
 
 // הגדרת ה-proxy לשרת האחורי
 app.use('/api', createProxyMiddleware({
