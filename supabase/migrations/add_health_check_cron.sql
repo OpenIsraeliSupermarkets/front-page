@@ -9,7 +9,7 @@ create table if not exists public.app_settings (
     value text not null
 );
 insert into public.app_settings (key, value)
-values ('supabase_anon_key', 'your_anon_key_here')
+values ('ANON_KEY', 'your_anon_key_here')
 on conflict (key) do update set value = excluded.value;
 
 -- Create the cron job to run every 5 minutes
@@ -21,7 +21,7 @@ select cron.schedule(
     net.http_post(
       url := 'https://sjifhmsdzwktdglnpyba.supabase.co/functions/v1/health',
       headers := format('{"Content-Type": "application/json", "Authorization": "Bearer %s"}',
-        (select value from public.app_settings where key = 'supabase_anon_key'))::jsonb,
+        (select value from public.app_settings where key = 'ANON_KEY'))::jsonb,
       body := '{"name":"Functions"}'::jsonb
     ) as request_id;
   $$

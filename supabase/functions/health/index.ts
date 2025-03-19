@@ -1,11 +1,11 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const API_URL =
-  Deno.env.get("API_URL") ?? "https://www.openisraelisupermarkets.co.il";
+const API_URL = Deno.env.get("API_URL") ?? "https://www.openisraelisupermarkets.co.il";
 const TOKEN = Deno.env.get("AUTH_TOKEN") ?? "";
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
-const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+const URL = Deno.env.get("URL") ?? "";
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+const ANON_KEY = Deno.env.get("ANON_KEY") ?? "";
 
 const ENDPOINTS = [
   `${API_URL}`,
@@ -31,7 +31,7 @@ const TIMEOUT_MS = 30000; // 30 seconds timeout
 serve(async () => {
   console.log("Starting health check process");
   const results: HealthCheckResult[] = [];
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabase = createClient(URL, SUPABASE_SERVICE_ROLE_KEY);
   console.log(`Checking ${ENDPOINTS.length} endpoints`);
 
   for (const endpoint of ENDPOINTS) {

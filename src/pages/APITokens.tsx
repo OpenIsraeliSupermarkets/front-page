@@ -32,10 +32,7 @@ const APITokens = () => {
     const loadTokens = async () => {
       if (!user) return;
 
-      const { data: tokens, error } = await supabase
-        .from("api_tokens")
-        .select("*")
-        .order("created_at", { ascending: false });
+      const { data, error } = await supabase.functions.invoke('get-tokens');
 
       if (error) {
         toast({
@@ -46,7 +43,7 @@ const APITokens = () => {
         return;
       }
 
-      setTokens(tokens);
+      setTokens(data || []);
     };
 
     loadTokens();
@@ -71,12 +68,8 @@ const APITokens = () => {
       return;
     }
 
-    const token = crypto.randomUUID();
-
-    const { error } = await supabase.from("api_tokens").insert({
-      name: tokenName,
-      token: token,
-      user_id: user.id,
+    const { data, error } = await supabase.functions.invoke('create-token', {
+      body: { name: tokenName }
     });
 
     if (error) {
@@ -88,14 +81,11 @@ const APITokens = () => {
       return;
     }
 
-    setGeneratedToken(token);
+    setGeneratedToken(data.token);
     setTokenName("");
 
     // Refresh tokens list
-    const { data: updatedTokens } = await supabase
-      .from("api_tokens")
-      .select("*")
-      .order("created_at", { ascending: false });
+    const { data: updatedTokens } = await supabase.functions.invoke('get-tokens');
 
     if (updatedTokens) {
       setTokens(updatedTokens);
@@ -126,30 +116,39 @@ const APITokens = () => {
       return;
     }
 
-    const { error } = await supabase
-      .from("api_tokens")
-      .update({ is_active: false })
-      .eq("id", tokenId);
+    try {
+      const { error } = await supabase.functions.invoke('deactivate-token', {
+        body: JSON.stringify({ tokenId })
+      });
 
-    if (error) {
+      if (error) {
+        console.error("Function error:", error);
+        toast({
+          variant: "destructive",
+          title: t("errorTitle"),
+          description: t("errorDeactivateToken"),
+        });
+        return;
+      }
+
+      setTokens(
+        tokens.map((token) =>
+          token.id === tokenId ? { ...token, is_active: false } : token
+        )
+      );
+
+      toast({
+        title: t("tokenDeactivated"),
+        description: t("tokenDeactivatedDesc"),
+      });
+    } catch (e) {
+      console.error("API call failed:", e);
       toast({
         variant: "destructive",
         title: t("errorTitle"),
-        description: t("errorDeactivateToken"),
+        description: t("networkError"),
       });
-      return;
     }
-
-    setTokens(
-      tokens.map((token) =>
-        token.id === tokenId ? { ...token, is_active: false } : token
-      )
-    );
-
-    toast({
-      title: t("tokenDeactivated"),
-      description: t("tokenDeactivatedDesc"),
-    });
   };
 
   return (
