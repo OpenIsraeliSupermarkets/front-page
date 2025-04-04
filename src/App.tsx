@@ -32,6 +32,7 @@ const App = () => (
                 <Route path="/api-tokens" element={<APITokens />} />
                 <Route path="/playground" element={<Playground />} />
                 <Route path="/health" element={<HealthMonitor />} />
+                <Route path="/api/*" element={<API />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </div>
