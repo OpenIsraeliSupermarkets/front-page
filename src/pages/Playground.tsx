@@ -199,10 +199,15 @@ const Playground = () => {
         setLoading(true);
         setError(null);
         const response = await fetch(
-          `/api/raw/file_content?chain=${encodeURIComponent(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/get-file-content?chain=${encodeURIComponent(
             selectedChain
           )}&file=${encodeURIComponent(selectedFile)}`,
-          { headers }
+          {
+            headers: {
+              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+              ...headers,
+            },
+          }
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
