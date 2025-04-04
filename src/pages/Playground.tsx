@@ -85,21 +85,25 @@ const Playground = () => {
           return;
         }
 
-        // Create new playground token
-        const newToken = crypto.randomUUID();
-        const { error: insertError } = await supabase
-          .from("api_tokens")
-          .insert({
-            name: "Playground",
-            token: newToken,
-            user_id: user.id,
-          });
+        // Create new playground token using edge function
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-token`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            },
+            body: JSON.stringify({ name: "Playground" }),
+          }
+        );
 
-        if (insertError) {
-          throw insertError;
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        setApiToken(newToken);
+        const data = await response.json();
+        setApiToken(data.token);
         toast({
           title: t("tokenCreated"),
           description: t("tokenCreatedDesc"),
