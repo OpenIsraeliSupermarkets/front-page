@@ -7,13 +7,6 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    proxy: {
-      "/api": {
-        target: "https://www.openisraelisupermarkets.co.il",
-        changeOrigin: true,
-        secure: false,
-      },
-    },
   },
   plugins: [react()],
   resolve: {
