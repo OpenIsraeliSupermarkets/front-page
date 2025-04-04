@@ -48,7 +48,7 @@ const Documentation = () => {
               className="bg-secondary/50 p-4 rounded-md font-mono text-sm mb-6"
               dir="ltr"
             >
-              <code>http://api.openisraelisupermarkets.co.il</code>
+              <code>http://api.openisraelisupermarkets.co.il:8080</code>
             </div>
 
             <h3 className="text-lg font-medium mb-4">{t("authentication")}</h3>
@@ -282,7 +282,7 @@ async function listFiles(chain, fileType = null) {
     code: `import requests
 
 # API configuration
-API_BASE_URL = 'http://api.openisraelisupermarkets.co.il'
+API_BASE_URL = 'http://api.openisraelisupermarkets.co.il:8080'
 API_TOKEN = 'YOUR_API_TOKEN'
 
 headers = {

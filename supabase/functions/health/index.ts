@@ -4,7 +4,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const DOMAIN_URL =
   Deno.env.get("DOMAIN_URL") ?? "https://www.openisraelisupermarkets.co.il";
 const API_URL =
-  Deno.env.get("API_URL") ?? "https://api.openisraelisupermarkets.co.il";
+  Deno.env.get("API_URL") ?? "https://api.openisraelisupermarkets.co.il:8080";
 const TOKEN = Deno.env.get("AUTH_TOKEN") ?? "";
 const URL = Deno.env.get("URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY =

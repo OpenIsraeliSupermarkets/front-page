@@ -7,7 +7,6 @@ import Index from "./pages/Index";
 import Documentation from "./pages/Documentation";
 import NotFound from "./pages/NotFound";
 import APITokens from "./pages/APITokens";
-import API from "./pages/API";
 import Playground from "./pages/Playground";
 import HealthMonitor from "./pages/HealthMonitor";
 import Navbar from "./components/Navbar";
