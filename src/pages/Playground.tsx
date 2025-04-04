@@ -125,9 +125,12 @@ const Playground = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch(`/api/list_chains`, {
-          headers,
-        });
+        const response = await fetch(
+          `http://api.openisraelisupermarkets.co.il/list_chains`,
+          {
+            headers,
+          }
+        );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -156,7 +159,9 @@ const Playground = () => {
         setLoading(true);
         setError(null);
         const response = await fetch(
-          `/api/list_scraped_files?chain=${encodeURIComponent(selectedChain)}`,
+          `http://api.openisraelisupermarkets.co.il/list_scraped_files?chain=${encodeURIComponent(
+            selectedChain
+          )}`,
           { headers }
         );
         if (!response.ok) {

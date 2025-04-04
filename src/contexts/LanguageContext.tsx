@@ -268,11 +268,11 @@ const translations = {
       milliseconds: "ms",
 
       // Endpoint Names
-      "https://www.openisraelisupermarkets.co.il/api/long_term_health":
+      "http://api.openisraelisupermarkets.co.il/long_term_health":
         "Long Term Historical Data Storage",
-      "https://www.openisraelisupermarkets.co.il/api/short_term_health":
+      "http://api.openisraelisupermarkets.co.il/short_term_health":
         "Data Processing",
-      "https://www.openisraelisupermarkets.co.il/api/service_health":
+      "http://api.openisraelisupermarkets.co.il/service_health":
         "API Functionality",
       "https://www.openisraelisupermarkets.co.il": "Home Page",
     },
@@ -521,11 +521,11 @@ const translations = {
       milliseconds: "אלפיות שנייה",
 
       // Endpoint Names
-      "https://www.openisraelisupermarkets.co.il/api/long_term_health":
+      "http://api.openisraelisupermarkets.co.il/long_term_health":
         "אחסון נתונים היסטורי ארוך טווח",
-      "https://www.openisraelisupermarkets.co.il/api/short_term_health":
+      "http://api.openisraelisupermarkets.co.il/short_term_health":
         "עיבוד נתונים",
-      "https://www.openisraelisupermarkets.co.il/api/service_health":
+      "http://api.openisraelisupermarkets.co.il/service_health":
         "פונקציונליות ה-API",
       "https://www.openisraelisupermarkets.co.il": "דף הבית",
     },
