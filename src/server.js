@@ -25,6 +25,11 @@ app.use(
 // שירות קבצים סטטיים מתיקיית dist
 app.use(express.static(path.join(__dirname, "../dist")));
 
+// // Handle deprecated API endpoint
+// app.get("/api/*", (req, res) => {
+//   res.status(410).send("deprecated, please check out the documentation");
+// });
+
 // הפניית כל הבקשות האחרות לאפליקציית React
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../dist/index.html"));
