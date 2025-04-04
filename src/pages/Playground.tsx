@@ -129,10 +129,12 @@ const Playground = () => {
         const response = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/list-chains`,
           {
+            method: "POST",
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-              ...headers,
             },
+            body: JSON.stringify({ token: apiToken }),
           }
         );
         if (!response.ok) {
@@ -153,7 +155,7 @@ const Playground = () => {
     };
 
     fetchChains();
-  }, [t, headers]);
+  }, [t, apiToken]);
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -163,14 +165,14 @@ const Playground = () => {
         setLoading(true);
         setError(null);
         const response = await fetch(
-          `${
-            import.meta.env.VITE_SUPABASE_URL
-          }/functions/v1/list-files?chain=${encodeURIComponent(selectedChain)}`,
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/list-files`,
           {
+            method: "POST",
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-              ...headers,
             },
+            body: JSON.stringify({ token: apiToken, chain: selectedChain }),
           }
         );
         if (!response.ok) {
@@ -193,7 +195,7 @@ const Playground = () => {
     };
 
     fetchFiles();
-  }, [selectedChain, t, headers]);
+  }, [selectedChain, t, apiToken]);
 
   useEffect(() => {
     const fetchFileContent = async () => {
@@ -203,14 +205,18 @@ const Playground = () => {
         setLoading(true);
         setError(null);
         const response = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/get-file-content?chain=${encodeURIComponent(
-            selectedChain
-          )}&file=${encodeURIComponent(selectedFile)}`,
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/get-file-content`,
           {
+            method: "POST",
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-              ...headers,
             },
+            body: JSON.stringify({
+              token: apiToken,
+              chain: selectedChain,
+              file: selectedFile,
+            }),
           }
         );
         if (!response.ok) {
@@ -232,7 +238,7 @@ const Playground = () => {
     };
 
     fetchFileContent();
-  }, [selectedFile, selectedChain, t, headers]);
+  }, [selectedFile, selectedChain, t, apiToken]);
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-100" dir={direction}>

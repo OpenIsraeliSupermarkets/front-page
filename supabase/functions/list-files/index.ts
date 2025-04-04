@@ -2,15 +2,17 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const API_URL =
   Deno.env.get("API_URL") ?? "http://api.openisraelisupermarkets.co.il:8080";
-const AUTH_TOKEN = Deno.env.get("AUTH_TOKEN") ?? "";
 
 serve(async (req) => {
+  console.log("Received request to list-files");
+
   // Handle preflight OPTIONS request for CORS
   if (req.method === "OPTIONS") {
+    console.log("Handling OPTIONS request");
     return new Response(null, {
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, OPTIONS",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
         "Access-Control-Allow-Headers": "Authorization, Content-Type",
         "Access-Control-Max-Age": "86400",
       },
@@ -18,28 +20,41 @@ serve(async (req) => {
   }
 
   try {
-    const url = new URL(req.url);
-    const chain = url.searchParams.get("chain");
+    const { token, chain } = await req.json();
+    console.log("Extracted playground token:", token ? "present" : "missing");
+    console.log("Requested chain:", chain);
+
+    if (!token) {
+      throw new Error("Playground token is required");
+    }
 
     if (!chain) {
       throw new Error("Chain parameter is required");
     }
 
-    const response = await fetch(
-      `${API_URL}/list_scraped_files?chain=${encodeURIComponent(chain)}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${AUTH_TOKEN}`,
-        },
-      }
-    );
+    const apiUrl = `${API_URL}/list_scraped_files?chain=${encodeURIComponent(
+      chain
+    )}`;
+    console.log("Making request to API:", apiUrl);
+
+    const response = await fetch(apiUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (!response.ok) {
+      console.error(
+        "API request failed:",
+        response.status,
+        response.statusText
+      );
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
+    console.log("Successfully retrieved files data for chain:", chain);
 
     return new Response(JSON.stringify(data), {
       headers: {
@@ -48,6 +63,7 @@ serve(async (req) => {
       },
     });
   } catch (error) {
+    console.error("Error in list-files:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: {
