@@ -6,6 +6,17 @@ import { AuthDialog } from "@/components/AuthDialog";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
 
+interface FileContent {
+  rows: Array<{
+    row_index: number;
+    row_content: Record<string, string>;
+  }>;
+}
+
+interface File {
+  file_name: string;
+}
+
 const Playground = () => {
   const { t } = useTranslation();
   const { direction } = useLanguage();
@@ -13,12 +24,12 @@ const Playground = () => {
   const { toast } = useToast();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [chains, setChains] = useState([]);
-  const [selectedChain, setSelectedChain] = useState(null);
-  const [files, setFiles] = useState([]);
+  const [error, setError] = useState<string | null>(null);
+  const [chains, setChains] = useState<string[]>([]);
+  const [selectedChain, setSelectedChain] = useState<string | null>(null);
+  const [files, setFiles] = useState<string[]>([]);
   const [selectedFile, setSelectedFile] = useState("");
-  const [fileContent, setFileContent] = useState(null);
+  const [fileContent, setFileContent] = useState<FileContent | null>(null);
   const [apiToken, setApiToken] = useState<string | null>(null);
   const [sortConfig, setSortConfig] = useState({
     key: "",
@@ -86,23 +97,15 @@ const Playground = () => {
         }
 
         // Create new playground token using edge function
-        const response = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-token`,
+        const { data, error } = await supabase.functions.invoke(
+          "create-token",
           {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            },
-            body: JSON.stringify({ name: "Playground" }),
+            body: { name: "Playground" },
           }
         );
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (error) throw error;
 
-        const data = await response.json();
         setApiToken(data.token);
         toast({
           title: t("tokenCreated"),
@@ -126,21 +129,12 @@ const Playground = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/list-chains`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            },
-            body: JSON.stringify({ token: apiToken }),
-          }
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
+        const { data, error } = await supabase.functions.invoke("list-chains", {
+          body: { token: apiToken },
+        });
+
+        if (error) throw error;
+
         if (!Array.isArray(data.list_of_chains)) {
           throw new Error("Invalid data format received");
         }
@@ -164,25 +158,20 @@ const Playground = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/list-files`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            },
-            body: JSON.stringify({ token: apiToken, chain: selectedChain }),
-          }
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
+        const { data, error } = await supabase.functions.invoke("list-files", {
+          body: { token: apiToken, chain: selectedChain },
+        });
+
+        if (error) throw error;
+
         if (!Array.isArray(data.processed_files)) {
           throw new Error("Invalid data format received");
         }
-        setFiles(data.processed_files.map((file) => file.file_name) || []);
+        setFiles(
+          data.processed_files.map(
+            (file: { file_name: string }) => file.file_name
+          ) || []
+        );
         setSelectedFile("");
         setFileContent(null);
       } catch (err) {
@@ -204,26 +193,19 @@ const Playground = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/get-file-content`,
+        const { data, error } = await supabase.functions.invoke(
+          "get-file-content",
           {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            },
-            body: JSON.stringify({
+            body: {
               token: apiToken,
               chain: selectedChain,
               file: selectedFile,
-            }),
+            },
           }
         );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data);
+
+        if (error) throw error;
+
         if (!data.rows || !Array.isArray(data.rows)) {
           throw new Error("Invalid data format received");
         }
