@@ -126,6 +126,8 @@ const Playground = () => {
 
   useEffect(() => {
     const fetchChains = async () => {
+      if (!apiToken) return;
+
       try {
         setLoading(true);
         setError(null);
