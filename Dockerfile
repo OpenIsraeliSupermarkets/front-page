@@ -9,6 +9,10 @@ WORKDIR /workspace
 
 # התקנת כלי פיתוח נוספים
 RUN apt-get update && apt-get install -y \
+    gnupg2 \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138 0E98404D386FA1D9 DCC9EFBF77E11517 \
+    && apt-get update && apt-get install -y \
     git \
     curl \
     && rm -rf /var/lib/apt/lists/*
@@ -40,6 +44,7 @@ RUN chown -R node:node /app && \
     npm ci
 COPY . .
 RUN chown -R node:node /app
+RUN mkdir -p /app/dist/assets && chown -R node:node /app/dist
 USER node
 RUN npm run build
 

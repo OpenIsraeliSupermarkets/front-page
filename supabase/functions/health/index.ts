@@ -1,17 +1,21 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const API_URL = Deno.env.get("API_URL") ?? "https://www.openisraelisupermarkets.co.il";
+const DOMAIN_URL =
+  Deno.env.get("DOMAIN_URL") ?? "https://www.openisraelisupermarkets.co.il";
+const API_URL =
+  Deno.env.get("API_URL") ?? "https://api.openisraelisupermarkets.co.il:8080";
 const TOKEN = Deno.env.get("AUTH_TOKEN") ?? "";
 const URL = Deno.env.get("URL") ?? "";
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+const SUPABASE_SERVICE_ROLE_KEY =
+  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 const ANON_KEY = Deno.env.get("ANON_KEY") ?? "";
 
 const ENDPOINTS = [
-  `${API_URL}`,
-  `${API_URL}/api/service_health`,
-  `${API_URL}/api/short_term_health`,
-  `${API_URL}/api/long_term_health`,
+  `${DOMAIN_URL}`,
+  `${API_URL}/service_health`,
+  `${API_URL}/short_term_health`,
+  `${API_URL}/long_term_health`,
 ];
 
 interface HealthCheckResult {

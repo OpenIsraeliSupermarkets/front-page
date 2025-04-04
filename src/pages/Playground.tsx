@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useUser } from "@/contexts/UserContext";
-import { useNavigate } from "react-router-dom";
 import { AuthDialog } from "@/components/AuthDialog";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
@@ -11,7 +10,6 @@ const Playground = () => {
   const { t } = useTranslation();
   const { direction } = useLanguage();
   const { user } = useUser();
-  const navigate = useNavigate();
   const { toast } = useToast();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -30,9 +28,8 @@ const Playground = () => {
   const headers = useMemo(
     () => ({
       "Content-Type": "application/json",
-      Authorization: `Bearer ${apiToken}`,
     }),
-    [apiToken]
+    []
   );
 
   const sortedAndFilteredData = useMemo(() => {
@@ -125,9 +122,15 @@ const Playground = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch(`/api/list_chains`, {
-          headers,
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/list-chains`,
+          {
+            headers: {
+              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+              ...headers,
+            },
+          }
+        );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -156,8 +159,15 @@ const Playground = () => {
         setLoading(true);
         setError(null);
         const response = await fetch(
-          `/api/list_scraped_files?chain=${encodeURIComponent(selectedChain)}`,
-          { headers }
+          `${
+            import.meta.env.VITE_SUPABASE_URL
+          }/functions/v1/list-files?chain=${encodeURIComponent(selectedChain)}`,
+          {
+            headers: {
+              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+              ...headers,
+            },
+          }
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

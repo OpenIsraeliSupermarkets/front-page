@@ -7,7 +7,6 @@ import Index from "./pages/Index";
 import Documentation from "./pages/Documentation";
 import NotFound from "./pages/NotFound";
 import APITokens from "./pages/APITokens";
-import API from "./pages/API";
 import Playground from "./pages/Playground";
 import HealthMonitor from "./pages/HealthMonitor";
 import Navbar from "./components/Navbar";
@@ -32,7 +31,6 @@ const App = () => (
                 <Route path="/api-tokens" element={<APITokens />} />
                 <Route path="/playground" element={<Playground />} />
                 <Route path="/health" element={<HealthMonitor />} />
-                <Route path="/api/*" element={<API />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </div>

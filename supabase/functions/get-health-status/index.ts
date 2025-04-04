@@ -29,21 +29,21 @@ interface EndpointStatus {
 
 const ENDPOINTS = {
   "long-term": {
-    url: "https://www.openisraelisupermarkets.co.il/api/long_term_health",
+    url: "http://api.openisraelisupermarkets.co.il:8080/long_term_health",
     translations: {
       he: "אחסון נתונים היסטורי",
       en: "Long Term Historical Data Storage",
     },
   },
   "short-term": {
-    url: "https://www.openisraelisupermarkets.co.il/api/short_term_health",
+    url: "http://api.openisraelisupermarkets.co.il:8080/short_term_health",
     translations: {
       he: "עיבוד נתונים",
       en: "Data Processing",
     },
   },
   service: {
-    url: "https://www.openisraelisupermarkets.co.il/api/service_health",
+    url: "http://api.openisraelisupermarkets.co.il:8080/service_health",
     translations: {
       he: "פונקציונליות ה-API",
       en: "API Functionality",
