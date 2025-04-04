@@ -85,21 +85,25 @@ const Playground = () => {
           return;
         }
 
-        // Create new playground token
-        const newToken = crypto.randomUUID();
-        const { error: insertError } = await supabase
-          .from("api_tokens")
-          .insert({
-            name: "Playground",
-            token: newToken,
-            user_id: user.id,
-          });
+        // Create new playground token using edge function
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-token`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            },
+            body: JSON.stringify({ name: "Playground" }),
+          }
+        );
 
-        if (insertError) {
-          throw insertError;
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        setApiToken(newToken);
+        const data = await response.json();
+        setApiToken(data.token);
         toast({
           title: t("tokenCreated"),
           description: t("tokenCreatedDesc"),
@@ -125,10 +129,12 @@ const Playground = () => {
         const response = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/list-chains`,
           {
+            method: "POST",
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-              ...headers,
             },
+            body: JSON.stringify({ token: apiToken }),
           }
         );
         if (!response.ok) {
@@ -149,7 +155,7 @@ const Playground = () => {
     };
 
     fetchChains();
-  }, [t, headers]);
+  }, [t, apiToken]);
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -159,14 +165,14 @@ const Playground = () => {
         setLoading(true);
         setError(null);
         const response = await fetch(
-          `${
-            import.meta.env.VITE_SUPABASE_URL
-          }/functions/v1/list-files?chain=${encodeURIComponent(selectedChain)}`,
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/list-files`,
           {
+            method: "POST",
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-              ...headers,
             },
+            body: JSON.stringify({ token: apiToken, chain: selectedChain }),
           }
         );
         if (!response.ok) {
@@ -189,7 +195,7 @@ const Playground = () => {
     };
 
     fetchFiles();
-  }, [selectedChain, t, headers]);
+  }, [selectedChain, t, apiToken]);
 
   useEffect(() => {
     const fetchFileContent = async () => {
@@ -199,10 +205,19 @@ const Playground = () => {
         setLoading(true);
         setError(null);
         const response = await fetch(
-          `/api/raw/file_content?chain=${encodeURIComponent(
-            selectedChain
-          )}&file=${encodeURIComponent(selectedFile)}`,
-          { headers }
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/get-file-content`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            },
+            body: JSON.stringify({
+              token: apiToken,
+              chain: selectedChain,
+              file: selectedFile,
+            }),
+          }
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -223,7 +238,7 @@ const Playground = () => {
     };
 
     fetchFileContent();
-  }, [selectedFile, selectedChain, t, headers]);
+  }, [selectedFile, selectedChain, t, apiToken]);
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-100" dir={direction}>
